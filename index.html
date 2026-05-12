@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance v2.2 - Admin Control</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --success: #10b981;
+            --danger: #f43f5e;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.8);
+            --glass-dark: rgba(15, 23, 42, 0.9);
+        }
+
+        * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            margin: 0;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            background: var(--glass-dark);
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 30px;
+            padding: 40px;
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-bottom: 25px;
+        }
+
+        /* Video / HUD Style */
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 25px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
+
+        video { width: 100%; height: 100%; object-fit: cover; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; }
+
+        /* Tables & Lists */
+        .scroll-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.3);
+            padding: 5px;
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        tr { background: white; border-radius: 12px; }
+        td, th { padding: 12px; text-align: left; font-size: 0.9rem; }
+        
+        .btn-del {
+            color: var(--danger);
+            background: #fff1f2;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-del:hover { background: var(--danger); color: white; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--primary-glow); }
+
+        .status-badge { padding: 8px 15px; border-radius: 10px; font-weight: bold; display: inline-block; margin-bottom: 15px; font-size: 0.8rem;}
+        .status-ready { background: var(--success); color: white; }
+        .status-wait { background: #f59e0b; color: white; }
+
+        #displayName { 
+            font-size: 2.2rem; 
+            background: linear-gradient(to right, var(--primary), #ec4899); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin: 5px 0;
+        }
+
+        @media (max-width: 1100px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-fingerprint"></i> SMART ATTENDANCE v2.2</h1>
+</header>
+
+<div class="container">
+    <div class="left-panel">
+        <div class="card">
+            <div id="statusLabel" class="status-badge status-wait">
+                <i class="fas fa-sync fa-spin"></i> LOADING AI...
+            </div>
+            
+            <div class="video-container">
+                <div class="hud-overlay"></div>
+                <video id="video" autoplay muted></video>
+                <canvas id="overlay"></canvas>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <small style="color: #64748b; font-weight: bold;">LAST RECOGNIZED:</small>
+                    <h2 id="displayName">WAITING...</h2>
+                    <p id="displayTime" style="margin:0; color: var(--primary); font-weight: 600;">Please scan your face</p>
+                </div>
+                <div id="logCount" style="text-align:center; background: var(--dark); color:white; padding: 15px; border-radius: 20px; min-width: 80px;">
+                    <span style="font-size: 1.5rem; color: var(--success); font-weight: bold; display:block;">0</span>
+                    <small>LOGS</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="card" id="loginCard">
+            <h3 style="margin-top:0"><i class="fas fa-shield-alt"></i> Admin Control</h3>
+            <input type="password" id="passInput" placeholder="Enter Admin Password">
+            <button class="btn-primary" onclick="adminAuth()">Authorize</button>
+        </div>
+
+        <div id="adminPanel" style="display:none;">
+            <div class="card" style="border-left: 5px solid var(--primary);">
+                <h3 style="margin-top:0"><i class="fas fa-user-plus"></i> Register New User</h3>
+                <input id="regName" placeholder="Full Name">
+                <input id="regId" placeholder="Student ID">
+                <input id="regClass" placeholder="Class / Group">
+                <button class="btn-primary" onclick="registerFace()">
+                    <i class="fas fa-camera"></i> Scan & Save
+                </button>
+            </div>
+
+            <div class="card" style="border-left: 5px solid var(--success);">
+                <h3 style="margin-top:0"><i class="fas fa-users-viewfinder"></i> Database (Registered)</h3>
+                <div class="scroll-list">
+                    <table>
+                        <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 1;">
+                            <tr>
+                                <th>Name</th>
+                                <th>ID/Class</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registeredList">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button onclick="logout()" style="background:none; color: var(--danger); font-size: 0.9rem; margin-bottom: 20px;">
+                <i class="fas fa-sign-out-alt"></i> Logout Admin Mode
+            </button>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin:0"><i class="fas fa-history"></i> Today's Logs</h3>
+                <button id="exportBtn" class="btn-primary" style="width:auto; padding: 5px 12px; font-size: 0.75rem;" onclick="exportCSV()">Export CSV</button>
+            </div>
+            <div class="scroll-list">
+                <table>
+                    <tbody id="attendanceList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_PASS = "admin1234";
+    const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+    const LATE_TIME = "08:30";
+    const COOLDOWN = 10000;
+
+    let faceMatcher = null;
+    let attendanceData = JSON.parse(localStorage.getItem('att_history')) || [];
+    let registeredFaces = JSON.parse(localStorage.getItem('att_faces')) || [];
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('overlay');
+
+    async function init() {
+        try {
+            await Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+            ]);
+            updateStatus("SYSTEM READY", "status-ready");
+            startVideo();
+            refreshAttendanceTable();
+            refreshRegisteredList(); // โหลดรายชื่อที่ลงทะเบียนแล้ว
+            updateFaceMatcher();
+        } catch (err) {
+            updateStatus("AI ERROR", "status-wait");
+        }
+    }
+
+    async function startVideo() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            video.srcObject = stream;
+            video.onplaying = () => {
+                const displaySize = { width: video.videoWidth, height: video.videoHeight };
+                faceapi.matchDimensions(canvas, displaySize);
+                setInterval(runScanner, 1000);
+            };
+        } catch (e) { alert("Camera Denied"); }
+    }
+
+    async function runScanner() {
+        if (!faceMatcher) return;
+
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceLandmarks()
+            .withFaceDescriptors();
+
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const resized = faceapi.resizeResults(detections, { width: video.videoWidth, height: video.videoHeight });
+
+        resized.forEach(det => {
+            const result = faceMatcher.findBestMatch(det.descriptor);
+            if (result.label !== 'unknown' && result.distance < 0.45) {
+                new faceapi.draw.DrawBox(det.detection.box, { 
+                    label: result.label.split('|')[0], 
+                    boxColor: '#6366f1' 
+                }).draw(canvas);
+                processAttendance(result.label);
+            }
+        });
+    }
+
+    function processAttendance(label) {
+        const [name, id, room] = label.split('|');
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('th-TH');
+        const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+        
+        const lastLog = attendanceData.find(a => a.id === id && a.date === dateStr);
+        if (lastLog) {
+            const [lH, lM, lS] = lastLog.time.split(':');
+            const lTime = new Date(); lTime.setHours(lH, lM, lS);
+            if (now - lTime < COOLDOWN) return;
+        }
+
+        const entry = { name, id, room, date: dateStr, time: timeStr, status: timeStr > LATE_TIME ? "LATE" : "ON TIME" };
+        attendanceData.unshift(entry);
+        localStorage.setItem('att_history', JSON.stringify(attendanceData));
+        
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('displayTime').innerHTML = `<i class="fas fa-check"></i> CHECKED IN AT ${timeStr}`;
+        refreshAttendanceTable();
+    }
+
+    // --- ส่วนที่เพิ่ม/แก้ไข: การจัดการรายชื่อที่ลงทะเบียน ---
+
+    function refreshRegisteredList() {
+        const tbody = document.getElementById('registeredList');
+        tbody.innerHTML = registeredFaces.map((f, index) => {
+            const [name, id, room] = f.label.split('|');
+            return `
+                <tr>
+                    <td><strong>${name}</strong></td>
+                    <td>${id} <br><small>${room}</small></td>
+                    <td>
+                        <button class="btn-del" onclick="deleteFace(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function deleteFace(index) {
+        if (confirm("Delete this profile?")) {
+            registeredFaces.splice(index, 1);
+            localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
+            refreshRegisteredList();
+            updateFaceMatcher();
+        }
+    }
+
+    async function registerFace() {
+        const name = document.getElementById('regName').value;
+        const id = document.getElementById('regId').value;
+        const room = document.getElementById('regClass').value || '-';
+        if (!name || !id) return alert("Fill Name and ID");
+
+        updateStatus("CAPTURING...", "status-wait");
+        const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+        
+        if (det) {
+            registeredFaces.push({ label: `${name}|${id}|${room}`, descriptor: Array.from(det.descriptor) });
+            localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
+            updateFaceMatcher();
+            refreshRegisteredList(); // อัปเดตตารางรายชื่อทันที
+            alert("Registered Successfully!");
+            document.getElementById('regName').value = "";
+            document.getElementById('regId').value = "";
+        } else { alert("Face not found! Try again."); }
+        updateStatus("SYSTEM READY", "status-ready");
+    }
+
+    // --- ส่วนการจัดการ Admin & ทั่วไป ---
+
+    function adminAuth() {
+        if (document.getElementById('passInput').value === ADMIN_PASS) {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            refreshRegisteredList();
+        } else { alert("Wrong Password"); }
+    }
+
+    function logout() {
+        document.getElementById('loginCard').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('passInput').value = "";
+    }
+
+    function updateFaceMatcher() {
+        if (registeredFaces.length === 0) { faceMatcher = null; return; }
+        const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
+        faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
+    }
+
+    function refreshAttendanceTable() {
+        const tbody = document.getElementById('attendanceList');
+        const today = new Date().toLocaleDateString('th-TH');
+        const logs = attendanceData.filter(a => a.date === today);
+        document.querySelector('#logCount span').innerText = logs.length;
+        tbody.innerHTML = logs.map(a => `
+            <tr>
+                <td><strong>${a.name}</strong><br><small>${a.id}</small></td>
+                <td>${a.time}</td>
+                <td style="color:${a.status==='LATE'?'var(--danger)':'var(--success)'}; font-weight:bold">${a.status}</td>
+            </tr>
+        `).join('');
+    }
+
+    function exportCSV() {
+        let csv = "\uFEFFName,ID,Room,Date,Time,Status\n";
+        attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+        link.download = `report_${new Date().toLocaleDateString()}.csv`;
+        link.click();
+    }
+
+    function updateStatus(text, className) {
+        const el = document.getElementById('statusLabel');
+        el.innerHTML = `<i class="fas fa-info-circle"></i> ${text}`;
+        el.className = `status-badge ${className}`;
+    }
+
+    init();
+</script>v \
+</body>
+</html>
