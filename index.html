@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -387,7 +388,10 @@
         <div class="card">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="margin:0"><i class="fas fa-clock-rotate-left"></i> Today's Attendance</h3>
-                <button id="exportBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+                <div style="display: flex; gap: 8px;">
+                    <button id="exportBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button id="exportExcelBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                </div>
             </div>
             <div class="scroll-list">
                 <table>
@@ -514,7 +518,6 @@
 
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                // ตรวจสอบสถานะเพื่อประมวลผลข้อความเสียงภาษาไทย
                 const statusSpeech = status === "LATE" ? "มาสายครับ" : "มาทันเวลาครับ";
                 const utterance = new SpeechSynthesisUtterance(`${studentName} ${statusSpeech}`);
                 utterance.lang = 'th-TH';
@@ -642,8 +645,34 @@
         attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
         const link = document.createElement("a");
         link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-        link.download = `report_${new Date().toLocaleDateString()}.csv`;
+        link.download = `report_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`;
         link.click();
+    }
+
+    // ฟังก์ชันใหม่: Export เป็น Excel
+    function exportExcel() {
+        if (attendanceData.length === 0) {
+            alert("ไม่มีข้อมูลสำหรับ Export");
+            return;
+        }
+        
+        // จัดรูปแบบข้อมูลสำหรับ Excel
+        const formattedData = attendanceData.map(r => ({
+            "Name (ชื่อ)": r.name,
+            "ID (รหัสนักเรียน)": r.id,
+            "Room (ห้องเรียน)": r.room,
+            "Date (วันที่)": r.date,
+            "Time (เวลา)": r.time,
+            "Status (สถานะ)": r.status
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
+        
+        // แปลงวันที่และดาวน์โหลดไฟล์
+        const dateStr = new Date().toLocaleDateString('th-TH').replace(/\//g, '-');
+        XLSX.writeFile(wb, `Attendance_Report_${dateStr}.xlsx`);
     }
 
     function updateStatus(text, className) {
