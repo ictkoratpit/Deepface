@@ -449,7 +449,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo",
@@ -476,10 +476,9 @@ let isScanning = false;
 const video = document.getElementById('video');
 const canvas = document.getElementById('overlay');
 
-// 1. ฟังก์ชันดึงใบหน้าจาก Firebase
-async function loadFacesFromFirebase() {
-    try {
-        const querySnapshot = await getDocs(collection(db, "faces"));
+// 1. ฟังก์ชันดักฟังใบหน้าจาก Firebase แบบ Real-time
+function listenFacesFromFirebase() {
+    onSnapshot(collection(db, "faces"), (querySnapshot) => {
         const cloudFaces = [];
         querySnapshot.forEach((doc) => {
             cloudFaces.push(doc.data());
@@ -489,28 +488,31 @@ async function loadFacesFromFirebase() {
             registeredFaces = cloudFaces; 
             localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
         }
-    } catch (error) {
-        console.error("Error loading faces from Firebase: ", error);
-    }
+        refreshRegisteredList(); 
+        updateFaceMatcher();
+    }, (error) => {
+        console.error("Error listening faces from Firebase: ", error);
+    });
 }
 
-// 2. ฟังก์ชันดึงประวัติเข้าเรียนจาก Firebase
-async function loadAttendanceFromFirebase() {
-    try {
-        const querySnapshot = await getDocs(collection(db, "attendance"));
+// 2. ฟังก์ชันดักฟังประวัติเข้าเรียนจาก Firebase แบบ Real-time
+function listenAttendanceFromFirebase() {
+    onSnapshot(collection(db, "attendance"), (querySnapshot) => {
         const cloudAttendance = [];
         querySnapshot.forEach((doc) => {
             cloudAttendance.push(doc.data());
         });
         
-        if(cloudAttendance.length > 0) {
-            cloudAttendance.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
-            attendanceData = cloudAttendance; 
-            localStorage.setItem('att_history', JSON.stringify(attendanceData));
-        }
-    } catch (error) {
-        console.error("Error loading attendance: ", error);
-    }
+        // เรียงลำดับเวลาล่าสุดขึ้นก่อน
+        cloudAttendance.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        attendanceData = cloudAttendance; 
+        localStorage.setItem('att_history', JSON.stringify(attendanceData));
+        
+        // อัปเดตตารางประวัติบนจอทันทีที่มีคนสแกนหน้าผ่าน
+        refreshAttendanceTable();
+    }, (error) => {
+        console.error("Error listening attendance: ", error);
+    });
 }
 
 // 3. เริ่มต้นระบบ (Init)
@@ -523,15 +525,12 @@ async function init() {
             faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
         ]);
         
-        // โหลดข้อมูลจากฐานข้อมูลออนไลน์มาไว้ในเครื่อง
-        await loadFacesFromFirebase();
-        await loadAttendanceFromFirebase();
+        // เปิดระบบดักฟัง Real-time
+        listenFacesFromFirebase();
+        listenAttendanceFromFirebase();
 
         updateStatus("SYSTEM READY", "status-ready");
         startVideo();
-        refreshAttendanceTable();
-        refreshRegisteredList(); 
-        updateFaceMatcher();
     } catch (err) {
         console.error(err);
         updateStatus("AI ERROR", "status-wait");
@@ -585,7 +584,6 @@ async function runScanner() {
     }
 }
 
-// 4. แก้ไข ProcessAttendance ให้บันทึกลง Firebase ด้วย
 window.processAttendance = async function(label) {
     const [name, id, room] = label.split('|');
     const now = new Date();
@@ -608,7 +606,7 @@ window.processAttendance = async function(label) {
         timestamp: now.toISOString() 
     };
     
-    // บันทึกลงเครื่อง (Local) 
+    // บันทึกลงเครื่อง (Local) ชั่วคราวเพื่อให้ UI ตอบสนองทันที
     attendanceData.unshift(entry);
     localStorage.setItem('att_history', JSON.stringify(attendanceData));
     
@@ -685,7 +683,6 @@ window.deleteFace = function(index) {
     }
 }
 
-// 5. แก้ไข RegisterFace ให้บันทึกขึ้น Firebase
 window.registerFace = async function() {
     const name = document.getElementById('regName').value;
     const id = document.getElementById('regId').value;
