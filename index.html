@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart Attendance v2.2 - Admin Control</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -54,7 +54,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             text-align: center;
             border-bottom: 1px solid var(--glass-border);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
@@ -65,7 +65,7 @@
 
         header h1 {
             margin: 0;
-            font-size: 1.6rem;
+            font-size: 1.4rem; /* Adjusted for mobile */
             font-weight: 600;
             letter-spacing: 0.5px;
             background: linear-gradient(to right, #ffffff, #c7d2fe);
@@ -74,7 +74,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap; /* Allow wrap on small screens */
         }
 
         header h1 i {
@@ -86,7 +87,7 @@
             display: grid;
             grid-template-columns: 1fr 460px;
             gap: 30px;
-            padding: 40px;
+            padding: 30px;
             max-width: 1650px;
             margin: auto;
         }
@@ -95,8 +96,8 @@
             background: var(--glass-card);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px;
-            padding: 28px;
+            border-radius: 20px; /* Slightly smaller radius for mobile */
+            padding: 24px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--glass-border);
             margin-bottom: 25px;
@@ -125,6 +126,9 @@
             aspect-ratio: 4/3;
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(99, 102, 241, 0.15);
             border: 1px solid rgba(99, 102, 241, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .hud-overlay {
@@ -151,16 +155,16 @@
             pointer-events: none;
         }
         .video-container::before {
-            top: 20px; left: 20px;
+            top: 15px; left: 15px;
             border-width: 3px 0 0 3px;
         }
         .video-container::after {
-            bottom: 20px; right: 20px;
+            bottom: 15px; right: 15px;
             border-width: 0 3px 3px 0;
         }
 
         video { width: 100%; height: 100%; object-fit: cover; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 5; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
 
         /* Status Badge */
         .status-badge { 
@@ -190,35 +194,49 @@
 
         /* Displays Labels */
         #displayName { 
-            font-size: 2.4rem; 
+            font-size: 2.2rem; 
             font-weight: 700;
             background: linear-gradient(to right, #ffffff, var(--primary-bright), #f43f5e); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
             margin: 8px 0;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            word-break: break-word;
+        }
+
+        .recognized-block {
+            margin-top: 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(0,0,0,0.15); 
+            padding: 20px; 
+            border-radius: 18px; 
+            border: 1px solid var(--glass-border);
+            gap: 15px;
         }
 
         /* Tables & Scrollbar */
         .scroll-list {
             max-height: 280px;
             overflow-y: auto;
+            overflow-x: auto; /* For mobile tables */
             border-radius: 14px;
             background: rgba(0, 0, 0, 0.2);
             padding: 6px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .scroll-list::-webkit-scrollbar { width: 6px; }
+        .scroll-list::-webkit-scrollbar { width: 6px; height: 6px; }
         .scroll-list::-webkit-scrollbar-track { background: transparent; }
         .scroll-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
         .scroll-list::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px; }
         tr { background: rgba(30, 41, 59, 0.4); border-radius: 12px; }
         tr:hover { background: rgba(255, 255, 255, 0.05); }
-        td, th { padding: 14px 16px; text-align: left; font-size: 0.9rem; color: var(--text-main); }
-        th { font-weight: 500; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+        td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; color: var(--text-main); }
+        th { font-weight: 500; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; white-space: nowrap; }
         
         /* UI Elements */
         input {
@@ -284,6 +302,7 @@
             font-size: 0.75rem;
             font-weight: 600;
             display: inline-block;
+            white-space: nowrap;
         }
 
         h3 {
@@ -296,8 +315,44 @@
         }
         h3 i { color: var(--primary-bright); }
 
+        /* ====== RESPONSIVE MOBILE DESIGN ====== */
         @media (max-width: 1150px) { 
             .container { grid-template-columns: 1fr; padding: 20px; } 
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.1rem; }
+            .container { padding: 10px; gap: 15px; }
+            .card { padding: 18px; }
+            
+            /* For Mobile: Video aspect ratio adjustments to match typical phone camera */
+            .video-container { aspect-ratio: 3/4; max-height: 60vh; } 
+            
+            /* Stack layout for Recognized Block */
+            .recognized-block { 
+                flex-direction: column; 
+                text-align: center; 
+                padding: 15px;
+            }
+            #displayName { font-size: 1.6rem; }
+            #logCount { width: 100%; }
+
+            /* Header of Today's Attendance list */
+            .attendance-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 12px;
+            }
+            .attendance-header > div {
+                width: 100%;
+                display: flex;
+                gap: 8px;
+            }
+            .attendance-header button {
+                flex: 1; /* Make export buttons take equal half width */
+                padding: 8px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -316,11 +371,10 @@
             
             <div class="video-container">
                 <div class="hud-overlay"></div>
-                <video id="video" autoplay muted></video>
-                <canvas id="overlay"></canvas>
+                <video id="video" autoplay muted playsinline></video> <canvas id="overlay"></canvas>
             </div>
             
-            <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15); padding: 20px; border-radius: 18px; border: 1px solid var(--glass-border);">
+            <div class="recognized-block">
                 <div>
                     <small style="color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">LAST RECOGNIZED:</small>
                     <h2 id="displayName">WAITING...</h2>
@@ -345,7 +399,7 @@
             <div class="card" style="border-left: 4px solid var(--primary);">
                 <h3 style="margin-top:0"><i class="fas fa-user-plus"></i> Register New User</h3>
                 <input id="regName" placeholder="Full Name">
-                <input id="regId" placeholder="Student ID">
+                <input id="regId" placeholder="Student ID" type="number">
                 <input id="regClass" placeholder="Class / Group">
                 <button class="btn-primary" onclick="registerFace()">
                     <i class="fas fa-camera"></i> Scan & Save Profile
@@ -386,11 +440,11 @@
         </div>
 
         <div class="card">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div class="attendance-header" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="margin:0"><i class="fas fa-clock-rotate-left"></i> Today's Attendance</h3>
-                <div style="display: flex; gap: 8px;">
-                    <button id="exportBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
-                    <button id="exportExcelBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                <div>
+                    <button id="exportBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+                    <button id="exportExcelBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Excel</button>
                 </div>
             </div>
             <div class="scroll-list">
@@ -402,7 +456,32 @@
     </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo",
+  authDomain: "deepface-74fbf.firebaseapp.com",
+  projectId: "deepface-74fbf",
+  storageBucket: "deepface-74fbf.firebasestorage.app",
+  messagingSenderId: "972480534547",
+  appId: "1:972480534547:web:76e3001f550be7ef8e07e6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// คอมเมนต์ testFirebase() ไว้เพื่อไม่ให้เด้ง Alert ทุกครั้งที่รีเฟรชหน้าเว็บ
+// async function testFirebase() {
+//     await addDoc(collection(db, "test"), {
+//         name: "Deepface",
+//         time: new Date().toISOString()
+//     });
+//     console.log("Firebase Connected");
+// }
+// testFirebase();
+
     const ADMIN_PASS = "admin1234";
     const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
     const LATE_TIME = "08:00";
@@ -435,14 +514,18 @@
 
     async function startVideo() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            // ปรับแก้ตรงนี้: ให้บังคับเปิดกล้องหน้า (facingMode: "user") เหมาะสำหรับมือถือ
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "user" } 
+            });
             video.srcObject = stream;
-            video.onplaying = () => {
+            video.onloadedmetadata = () => {
+                video.play();
                 const displaySize = { width: video.videoWidth, height: video.videoHeight };
                 faceapi.matchDimensions(canvas, displaySize);
                 setInterval(runScanner, 200);
             };
-        } catch (e) { alert("Camera Denied"); }
+        } catch (e) { alert("Camera Denied or Not Supported"); }
     }
 
     async function runScanner() {
@@ -454,10 +537,11 @@
                 .withFaceLandmarks()
                 .withFaceDescriptors();
 
+            const displaySize = { width: video.videoWidth, height: video.videoHeight };
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const resized = faceapi.resizeResults(detections, { width: video.videoWidth, height: video.videoHeight });
+            const resized = faceapi.resizeResults(detections, displaySize);
 
             resized.forEach(det => {
                 const result = faceMatcher.findBestMatch(det.descriptor);
@@ -476,7 +560,10 @@
         }
     }
 
-    function processAttendance(label) {
+    // ส่วนของ Logic ฟังก์ชันอื่นๆ (processAttendance, playNotification, etc.) ใช้ของเดิมครับ 
+    // ผมนำมาใส่ไว้ให้ครบถ้วนเพื่อที่คุณจะได้ก็อปปี้ไปวางได้ทีเดียว
+
+    window.processAttendance = function(label) {
         const [name, id, room] = label.split('|');
         const now = new Date();
         const dateStr = now.toLocaleDateString('th-TH');
@@ -500,7 +587,7 @@
         playNotification(name, status);
     }
 
-    function playNotification(studentName, status) {
+    window.playNotification = function(studentName, status) {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
@@ -533,7 +620,7 @@
         }
     }
 
-    function refreshRegisteredList() {
+    window.refreshRegisteredList = function() {
         const tbody = document.getElementById('registeredList');
         tbody.innerHTML = registeredFaces.map((f, index) => {
             const [name, id, room] = f.label.split('|');
@@ -551,7 +638,7 @@
         }).join('');
     }
 
-    function deleteFace(index) {
+    window.deleteFace = function(index) {
         if (confirm("Delete this profile?")) {
             registeredFaces.splice(index, 1);
             localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
@@ -560,7 +647,7 @@
         }
     }
 
-    async function registerFace() {
+    window.registerFace = async function() {
         const name = document.getElementById('regName').value;
         const id = document.getElementById('regId').value;
         const room = document.getElementById('regClass').value || '-';
@@ -582,7 +669,7 @@
         updateStatus("SYSTEM READY", "status-ready");
     }
 
-    function adminAuth() {
+    window.adminAuth = function() {
         if (document.getElementById('passInput').value === ADMIN_PASS) {
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
@@ -590,19 +677,19 @@
         } else { alert("Wrong Password"); }
     }
 
-    function logout() {
+    window.logout = function() {
         document.getElementById('loginCard').style.display = 'block';
         document.getElementById('adminPanel').style.display = 'none';
         document.getElementById('passInput').value = "";
     }
 
-    function updateFaceMatcher() {
+    window.updateFaceMatcher = function() {
         if (registeredFaces.length === 0) { faceMatcher = null; return; }
         const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
         faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
     }
 
-    function refreshAttendanceTable() {
+    window.refreshAttendanceTable = function() {
         const tbody = document.getElementById('attendanceList');
         const today = new Date().toLocaleDateString('th-TH');
         const logs = attendanceData.filter(a => a.date === today);
@@ -619,8 +706,7 @@
         }).join('');
     }
 
-    /* ฟังก์ชันแอดมิน: ล้างข้อมูลประวัติลงเวลาเรียน */
-    function clearAttendanceHistory() {
+    window.clearAttendanceHistory = function() {
         if (confirm("⚠️ คุณแน่ใจใช่ไหมที่จะลบ 'ประวัติการเข้าเรียนทั้งหมด' ? ข้อมูลนี้จะไม่สามารถกู้คืนได้")) {
             attendanceData = [];
             localStorage.setItem('att_history', JSON.stringify([]));
@@ -629,8 +715,7 @@
         }
     }
 
-    /* ฟังก์ชันแอดมิน: ล้างข้อมูลใบหน้าที่ลงทะเบียนไว้ */
-    function clearRegisteredFaces() {
+    window.clearRegisteredFaces = function() {
         if (confirm("🚨 คำเตือนขั้นสูง! คุณต้องการลบ 'รายชื่อนักเรียนและฐานข้อมูลใบหน้าทั้งหมด' ใช่หรือไม่? นักเรียนจะไม่สามารถสแกนหน้าได้จนกว่าจะลงทะเบียนใหม่")) {
             registeredFaces = [];
             localStorage.setItem('att_faces', JSON.stringify([]));
@@ -640,7 +725,7 @@
         }
     }
 
-    function exportCSV() {
+    window.exportCSV = function() {
         let csv = "\uFEFFName,ID,Room,Date,Time,Status\n";
         attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
         const link = document.createElement("a");
@@ -649,14 +734,12 @@
         link.click();
     }
 
-    // ฟังก์ชันใหม่: Export เป็น Excel
-    function exportExcel() {
+    window.exportExcel = function() {
         if (attendanceData.length === 0) {
             alert("ไม่มีข้อมูลสำหรับ Export");
             return;
         }
         
-        // จัดรูปแบบข้อมูลสำหรับ Excel
         const formattedData = attendanceData.map(r => ({
             "Name (ชื่อ)": r.name,
             "ID (รหัสนักเรียน)": r.id,
@@ -670,7 +753,6 @@
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
         
-        // แปลงวันที่และดาวน์โหลดไฟล์
         const dateStr = new Date().toLocaleDateString('th-TH').replace(/\//g, '-');
         XLSX.writeFile(wb, `Attendance_Report_${dateStr}.xlsx`);
     }
