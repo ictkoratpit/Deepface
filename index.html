@@ -65,7 +65,7 @@
 
         header h1 {
             margin: 0;
-            font-size: 1.4rem; /* Adjusted for mobile */
+            font-size: 1.4rem; 
             font-weight: 600;
             letter-spacing: 0.5px;
             background: linear-gradient(to right, #ffffff, #c7d2fe);
@@ -75,7 +75,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            flex-wrap: wrap; /* Allow wrap on small screens */
+            flex-wrap: wrap; 
         }
 
         header h1 i {
@@ -96,7 +96,7 @@
             background: var(--glass-card);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px; /* Slightly smaller radius for mobile */
+            border-radius: 20px; 
             padding: 24px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--glass-border);
@@ -116,7 +116,6 @@
             opacity: 0.5;
         }
 
-        /* Video / HUD Cyber Style */
         .video-container {
             position: relative;
             width: 100%;
@@ -142,7 +141,6 @@
             background-size: 40px 40px;
         }
 
-        /* HUD Corners */
         .video-container::before, .video-container::after {
             content: '';
             position: absolute;
@@ -166,7 +164,6 @@
         video { width: 100%; height: 100%; object-fit: cover; }
         canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
 
-        /* Status Badge */
         .status-badge { 
             padding: 8px 18px; 
             border-radius: 30px; 
@@ -192,7 +189,6 @@
             border: 1px solid rgba(245, 158, 11, 0.4);
         }
 
-        /* Displays Labels */
         #displayName { 
             font-size: 2.2rem; 
             font-weight: 700;
@@ -216,11 +212,10 @@
             gap: 15px;
         }
 
-        /* Tables & Scrollbar */
         .scroll-list {
             max-height: 280px;
             overflow-y: auto;
-            overflow-x: auto; /* For mobile tables */
+            overflow-x: auto; 
             border-radius: 14px;
             background: rgba(0, 0, 0, 0.2);
             padding: 6px;
@@ -238,7 +233,6 @@
         td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; color: var(--text-main); }
         th { font-weight: 500; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; white-space: nowrap; }
         
-        /* UI Elements */
         input {
             width: 100%;
             padding: 14px 16px;
@@ -315,7 +309,6 @@
         }
         h3 i { color: var(--primary-bright); }
 
-        /* ====== RESPONSIVE MOBILE DESIGN ====== */
         @media (max-width: 1150px) { 
             .container { grid-template-columns: 1fr; padding: 20px; } 
         }
@@ -325,10 +318,8 @@
             .container { padding: 10px; gap: 15px; }
             .card { padding: 18px; }
             
-            /* For Mobile: Video aspect ratio adjustments to match typical phone camera */
             .video-container { aspect-ratio: 3/4; max-height: 60vh; } 
             
-            /* Stack layout for Recognized Block */
             .recognized-block { 
                 flex-direction: column; 
                 text-align: center; 
@@ -337,7 +328,6 @@
             #displayName { font-size: 1.6rem; }
             #logCount { width: 100%; }
 
-            /* Header of Today's Attendance list */
             .attendance-header {
                 flex-direction: column;
                 align-items: flex-start !important;
@@ -349,7 +339,7 @@
                 gap: 8px;
             }
             .attendance-header button {
-                flex: 1; /* Make export buttons take equal half width */
+                flex: 1; 
                 padding: 8px;
                 font-size: 0.8rem;
             }
@@ -426,11 +416,12 @@
                 <h3 style="margin-top:0;"><i class="fas fa-sliders"></i> Data Management</h3>
                 <div style="display: flex; gap: 10px; flex-direction: column;">
                     <button onclick="clearAttendanceHistory()" style="background: rgba(244, 63, 94, 0.15); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.3);">
-                        <i class="fas fa-clock-rotate-left"></i> ล้างประวัติเข้าเรียนทั้งหมด
+                        <i class="fas fa-clock-rotate-left"></i> ล้างประวัติเข้าเรียน (ในเครื่อง)
                     </button>
                     <button onclick="clearRegisteredFaces()" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3);">
-                        <i class="fas fa-users-slash"></i> ล้างรายชื่อนักเรียนทั้งหมด
+                        <i class="fas fa-users-slash"></i> ล้างรายชื่อนักเรียน (ในเครื่อง)
                     </button>
+                    <small style="color: var(--text-muted); text-align: center; font-size: 0.75rem;">*หากต้องการลบข้อมูลทั้งหมดในระบบคลาวด์ ต้องไปลบผ่าน Firebase Console ด้วย</small>
                 </div>
             </div>
 
@@ -458,317 +449,377 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo",
-  authDomain: "deepface-74fbf.firebaseapp.com",
-  projectId: "deepface-74fbf",
-  storageBucket: "deepface-74fbf.firebasestorage.app",
-  messagingSenderId: "972480534547",
-  appId: "1:972480534547:web:76e3001f550be7ef8e07e6"
+    apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo",
+    authDomain: "deepface-74fbf.firebaseapp.com",
+    projectId: "deepface-74fbf",
+    storageBucket: "deepface-74fbf.firebasestorage.app",
+    messagingSenderId: "972480534547",
+    appId: "1:972480534547:web:76e3001f550be7ef8e07e6"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// คอมเมนต์ testFirebase() ไว้เพื่อไม่ให้เด้ง Alert ทุกครั้งที่รีเฟรชหน้าเว็บ
-// async function testFirebase() {
-//     await addDoc(collection(db, "test"), {
-//         name: "Deepface",
-//         time: new Date().toISOString()
-//     });
-//     console.log("Firebase Connected");
-// }
-// testFirebase();
+const ADMIN_PASS = "admin1234";
+const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+const LATE_TIME = "08:00";
+const COOLDOWN = 10000;
 
-    const ADMIN_PASS = "admin1234";
-    const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
-    const LATE_TIME = "08:00";
-    const COOLDOWN = 10000;
+let faceMatcher = null;
+let attendanceData = JSON.parse(localStorage.getItem('att_history')) || [];
+let registeredFaces = JSON.parse(localStorage.getItem('att_faces')) || [];
+let isScanning = false;
 
-    let faceMatcher = null;
-    let attendanceData = JSON.parse(localStorage.getItem('att_history')) || [];
-    let registeredFaces = JSON.parse(localStorage.getItem('att_faces')) || [];
-    let isScanning = false;
+const video = document.getElementById('video');
+const canvas = document.getElementById('overlay');
 
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('overlay');
-
-    async function init() {
-        try {
-            await Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-            ]);
-            updateStatus("SYSTEM READY", "status-ready");
-            startVideo();
-            refreshAttendanceTable();
-            refreshRegisteredList(); 
-            updateFaceMatcher();
-        } catch (err) {
-            updateStatus("AI ERROR", "status-wait");
-        }
-    }
-
-    async function startVideo() {
-        try {
-            // ปรับแก้ตรงนี้: ให้บังคับเปิดกล้องหน้า (facingMode: "user") เหมาะสำหรับมือถือ
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: "user" } 
-            });
-            video.srcObject = stream;
-            video.onloadedmetadata = () => {
-                video.play();
-                const displaySize = { width: video.videoWidth, height: video.videoHeight };
-                faceapi.matchDimensions(canvas, displaySize);
-                setInterval(runScanner, 200);
-            };
-        } catch (e) { alert("Camera Denied or Not Supported"); }
-    }
-
-    async function runScanner() {
-        if (!faceMatcher || isScanning) return;
-        isScanning = true;
-
-        try {
-            const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
-                .withFaceLandmarks()
-                .withFaceDescriptors();
-
-            const displaySize = { width: video.videoWidth, height: video.videoHeight };
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const resized = faceapi.resizeResults(detections, displaySize);
-
-            resized.forEach(det => {
-                const result = faceMatcher.findBestMatch(det.descriptor);
-                if (result.label !== 'unknown' && result.distance < 0.45) {
-                    new faceapi.draw.DrawBox(det.detection.box, { 
-                        label: result.label.split('|')[0], 
-                        boxColor: '#6366f1' 
-                    }).draw(canvas);
-                    processAttendance(result.label);
-                }
-            });
-        } catch (error) {
-            console.error("Scanner error:", error);
-        } finally {
-            isScanning = false;
-        }
-    }
-
-    // ส่วนของ Logic ฟังก์ชันอื่นๆ (processAttendance, playNotification, etc.) ใช้ของเดิมครับ 
-    // ผมนำมาใส่ไว้ให้ครบถ้วนเพื่อที่คุณจะได้ก็อปปี้ไปวางได้ทีเดียว
-
-    window.processAttendance = function(label) {
-        const [name, id, room] = label.split('|');
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('th-TH');
-        const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+// 1. ฟังก์ชันดึงใบหน้าจาก Firebase
+async function loadFacesFromFirebase() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "faces"));
+        const cloudFaces = [];
+        querySnapshot.forEach((doc) => {
+            cloudFaces.push(doc.data());
+        });
         
-        const lastLog = attendanceData.find(a => a.id === id && a.date === dateStr);
-        if (lastLog) {
-            const [lH, lM, lS] = lastLog.time.split(':');
-            const lTime = new Date(); lTime.setHours(lH, lM, lS);
-            if (now - lTime < COOLDOWN) return;
-        }
-
-        const status = timeStr > LATE_TIME ? "LATE" : "ON TIME";
-        const entry = { name, id, room, date: dateStr, time: timeStr, status: status };
-        attendanceData.unshift(entry);
-        localStorage.setItem('att_history', JSON.stringify(attendanceData));
-        
-        document.getElementById('displayName').innerText = name;
-        document.getElementById('displayTime').innerHTML = `<i class="fas fa-circle-check" style="color:var(--success)"></i> CHECKED IN AT ${timeStr}`;
-        refreshAttendanceTable();
-        playNotification(name, status);
-    }
-
-    window.playNotification = function(studentName, status) {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(987.77, audioCtx.currentTime + 0.08);
-            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-            oscillator.start(audioCtx.currentTime);
-            oscillator.stop(audioCtx.currentTime + 0.12);
-
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const statusSpeech = status === "LATE" ? "มาสายครับ" : "มาทันเวลาครับ";
-                const utterance = new SpeechSynthesisUtterance(`${studentName} ${statusSpeech}`);
-                utterance.lang = 'th-TH';
-                const voices = window.speechSynthesis.getVoices();
-                const thaiVoice = voices.find(v => v.lang === 'th-TH' || v.lang.includes('th'));
-                if (thaiVoice) utterance.voice = thaiVoice;
-                utterance.rate = 1.15;
-                utterance.pitch = 1.25;
-                window.speechSynthesis.speak(utterance);
-            }
-        } catch (error) {
-            console.error("Audio error:", error);
-        }
-    }
-
-    window.refreshRegisteredList = function() {
-        const tbody = document.getElementById('registeredList');
-        tbody.innerHTML = registeredFaces.map((f, index) => {
-            const [name, id, room] = f.label.split('|');
-            return `
-                <tr>
-                    <td><strong style="color:#fff">${name}</strong></td>
-                    <td style="color:var(--text-muted)">${id} <br><small style="color:var(--primary-bright)">ห้อง ${room}</small></td>
-                    <td style="text-align: center;">
-                        <button class="btn-del" onclick="deleteFace(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    window.deleteFace = function(index) {
-        if (confirm("Delete this profile?")) {
-            registeredFaces.splice(index, 1);
+        if(cloudFaces.length > 0) {
+            registeredFaces = cloudFaces; 
             localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
-            refreshRegisteredList();
-            updateFaceMatcher();
         }
+    } catch (error) {
+        console.error("Error loading faces from Firebase: ", error);
     }
+}
 
-    window.registerFace = async function() {
-        const name = document.getElementById('regName').value;
-        const id = document.getElementById('regId').value;
-        const room = document.getElementById('regClass').value || '-';
-        if (!name || !id) return alert("Fill Name and ID");
-
-        updateStatus("CAPTURING FACE...", "status-wait");
-        const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224 })).withFaceLandmarks().withFaceDescriptor();
+// 2. ฟังก์ชันดึงประวัติเข้าเรียนจาก Firebase
+async function loadAttendanceFromFirebase() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "attendance"));
+        const cloudAttendance = [];
+        querySnapshot.forEach((doc) => {
+            cloudAttendance.push(doc.data());
+        });
         
-        if (det) {
-            registeredFaces.push({ label: `${name}|${id}|${room}`, descriptor: Array.from(det.descriptor) });
-            localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
-            updateFaceMatcher();
-            refreshRegisteredList(); 
-            alert("Registered Successfully!");
-            document.getElementById('regName').value = "";
-            document.getElementById('regId').value = "";
-            document.getElementById('regClass').value = "";
-        } else { alert("Face not found! Try again."); }
+        if(cloudAttendance.length > 0) {
+            cloudAttendance.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+            attendanceData = cloudAttendance; 
+            localStorage.setItem('att_history', JSON.stringify(attendanceData));
+        }
+    } catch (error) {
+        console.error("Error loading attendance: ", error);
+    }
+}
+
+// 3. เริ่มต้นระบบ (Init)
+async function init() {
+    try {
+        updateStatus("LOADING AI & CLOUD...", "status-wait");
+        await Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+        ]);
+        
+        // โหลดข้อมูลจากฐานข้อมูลออนไลน์มาไว้ในเครื่อง
+        await loadFacesFromFirebase();
+        await loadAttendanceFromFirebase();
+
         updateStatus("SYSTEM READY", "status-ready");
+        startVideo();
+        refreshAttendanceTable();
+        refreshRegisteredList(); 
+        updateFaceMatcher();
+    } catch (err) {
+        console.error(err);
+        updateStatus("AI ERROR", "status-wait");
+    }
+}
+
+async function startVideo() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "user" } 
+        });
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+            video.play();
+            const displaySize = { width: video.videoWidth, height: video.videoHeight };
+            faceapi.matchDimensions(canvas, displaySize);
+            setInterval(runScanner, 200);
+        };
+    } catch (e) { alert("Camera Denied or Not Supported"); }
+}
+
+async function runScanner() {
+    if (!faceMatcher || isScanning) return;
+    isScanning = true;
+
+    try {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
+            .withFaceLandmarks()
+            .withFaceDescriptors();
+
+        const displaySize = { width: video.videoWidth, height: video.videoHeight };
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const resized = faceapi.resizeResults(detections, displaySize);
+
+        resized.forEach(det => {
+            const result = faceMatcher.findBestMatch(det.descriptor);
+            if (result.label !== 'unknown' && result.distance < 0.45) {
+                new faceapi.draw.DrawBox(det.detection.box, { 
+                    label: result.label.split('|')[0], 
+                    boxColor: '#6366f1' 
+                }).draw(canvas);
+                processAttendance(result.label);
+            }
+        });
+    } catch (error) {
+        console.error("Scanner error:", error);
+    } finally {
+        isScanning = false;
+    }
+}
+
+// 4. แก้ไข ProcessAttendance ให้บันทึกลง Firebase ด้วย
+window.processAttendance = async function(label) {
+    const [name, id, room] = label.split('|');
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('th-TH');
+    const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+    
+    const lastLog = attendanceData.find(a => a.id === id && a.date === dateStr);
+    if (lastLog) {
+        const [lH, lM, lS] = lastLog.time.split(':');
+        const lTime = new Date(); lTime.setHours(lH, lM, lS);
+        if (now - lTime < COOLDOWN) return;
     }
 
-    window.adminAuth = function() {
-        if (document.getElementById('passInput').value === ADMIN_PASS) {
-            document.getElementById('loginCard').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            refreshRegisteredList();
-        } else { alert("Wrong Password"); }
+    const status = timeStr > LATE_TIME ? "LATE" : "ON TIME";
+    const entry = { 
+        name, id, room, 
+        date: dateStr, 
+        time: timeStr, 
+        status: status,
+        timestamp: now.toISOString() 
+    };
+    
+    // บันทึกลงเครื่อง (Local) 
+    attendanceData.unshift(entry);
+    localStorage.setItem('att_history', JSON.stringify(attendanceData));
+    
+    // บันทึกลงฐานข้อมูล Firebase (Cloud)
+    try {
+        await addDoc(collection(db, "attendance"), entry);
+    } catch (e) {
+        console.error("Firebase Error: ", e);
     }
+    
+    document.getElementById('displayName').innerText = name;
+    document.getElementById('displayTime').innerHTML = `<i class="fas fa-circle-check" style="color:var(--success)"></i> CHECKED IN AT ${timeStr}`;
+    refreshAttendanceTable();
+    playNotification(name, status);
+}
 
-    window.logout = function() {
-        document.getElementById('loginCard').style.display = 'block';
-        document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('passInput').value = "";
-    }
-
-    window.updateFaceMatcher = function() {
-        if (registeredFaces.length === 0) { faceMatcher = null; return; }
-        const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
-        faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
-    }
-
-    window.refreshAttendanceTable = function() {
-        const tbody = document.getElementById('attendanceList');
-        const today = new Date().toLocaleDateString('th-TH');
-        const logs = attendanceData.filter(a => a.date === today);
-        document.querySelector('#logCount span').innerText = logs.length;
-        tbody.innerHTML = logs.map(a => {
-            const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
-            return `
-                <tr>
-                    <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ID: ${a.id}</small></td>
-                    <td style="font-weight:500; color:#e2e8f0"><i class="far fa-clock" style="color:var(--text-muted); margin-right:5px;"></i>${a.time}</td>
-                    <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    window.clearAttendanceHistory = function() {
-        if (confirm("⚠️ คุณแน่ใจใช่ไหมที่จะลบ 'ประวัติการเข้าเรียนทั้งหมด' ? ข้อมูลนี้จะไม่สามารถกู้คืนได้")) {
-            attendanceData = [];
-            localStorage.setItem('att_history', JSON.stringify([]));
-            refreshAttendanceTable();
-            alert("ล้างประวัติการเข้าเรียนเรียบร้อยแล้ว");
-        }
-    }
-
-    window.clearRegisteredFaces = function() {
-        if (confirm("🚨 คำเตือนขั้นสูง! คุณต้องการลบ 'รายชื่อนักเรียนและฐานข้อมูลใบหน้าทั้งหมด' ใช่หรือไม่? นักเรียนจะไม่สามารถสแกนหน้าได้จนกว่าจะลงทะเบียนใหม่")) {
-            registeredFaces = [];
-            localStorage.setItem('att_faces', JSON.stringify([]));
-            refreshRegisteredList();
-            updateFaceMatcher();
-            alert("ล้างฐานข้อมูลนักเรียนเรียบร้อยแล้ว");
-        }
-    }
-
-    window.exportCSV = function() {
-        let csv = "\uFEFFName,ID,Room,Date,Time,Status\n";
-        attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-        link.download = `report_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`;
-        link.click();
-    }
-
-    window.exportExcel = function() {
-        if (attendanceData.length === 0) {
-            alert("ไม่มีข้อมูลสำหรับ Export");
-            return;
-        }
+window.playNotification = function(studentName, status) {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
         
-        const formattedData = attendanceData.map(r => ({
-            "Name (ชื่อ)": r.name,
-            "ID (รหัสนักเรียน)": r.id,
-            "Room (ห้องเรียน)": r.room,
-            "Date (วันที่)": r.date,
-            "Time (เวลา)": r.time,
-            "Status (สถานะ)": r.status
-        }));
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(987.77, audioCtx.currentTime + 0.08);
+        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.12);
 
-        const ws = XLSX.utils.json_to_sheet(formattedData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const statusSpeech = status === "LATE" ? "มาสายครับ" : "มาทันเวลาครับ";
+            const utterance = new SpeechSynthesisUtterance(`${studentName} ${statusSpeech}`);
+            utterance.lang = 'th-TH';
+            const voices = window.speechSynthesis.getVoices();
+            const thaiVoice = voices.find(v => v.lang === 'th-TH' || v.lang.includes('th'));
+            if (thaiVoice) utterance.voice = thaiVoice;
+            utterance.rate = 1.15;
+            utterance.pitch = 1.25;
+            window.speechSynthesis.speak(utterance);
+        }
+    } catch (error) {
+        console.error("Audio error:", error);
+    }
+}
+
+window.refreshRegisteredList = function() {
+    const tbody = document.getElementById('registeredList');
+    tbody.innerHTML = registeredFaces.map((f, index) => {
+        const [name, id, room] = f.label.split('|');
+        return `
+            <tr>
+                <td><strong style="color:#fff">${name}</strong></td>
+                <td style="color:var(--text-muted)">${id} <br><small style="color:var(--primary-bright)">ห้อง ${room}</small></td>
+                <td style="text-align: center;">
+                    <button class="btn-del" onclick="deleteFace(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+window.deleteFace = function(index) {
+    if (confirm("ลบโปรไฟล์นี้หรือไม่? (เป็นการลบแค่ในเครื่องเท่านั้น)")) {
+        registeredFaces.splice(index, 1);
+        localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
+        refreshRegisteredList();
+        updateFaceMatcher();
+    }
+}
+
+// 5. แก้ไข RegisterFace ให้บันทึกขึ้น Firebase
+window.registerFace = async function() {
+    const name = document.getElementById('regName').value;
+    const id = document.getElementById('regId').value;
+    const room = document.getElementById('regClass').value || '-';
+    if (!name || !id) return alert("Fill Name and ID");
+
+    updateStatus("CAPTURING FACE...", "status-wait");
+    const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224 })).withFaceLandmarks().withFaceDescriptor();
+    
+    if (det) {
+        const newFace = { 
+            label: `${name}|${id}|${room}`, 
+            descriptor: Array.from(det.descriptor) 
+        };
         
-        const dateStr = new Date().toLocaleDateString('th-TH').replace(/\//g, '-');
-        XLSX.writeFile(wb, `Attendance_Report_${dateStr}.xlsx`);
-    }
+        registeredFaces.push(newFace);
+        localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
+        
+        try {
+            await addDoc(collection(db, "faces"), newFace);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
 
-    function updateStatus(text, className) {
-        const el = document.getElementById('statusLabel');
-        el.innerHTML = `<i class="fas fa-circle-info"></i> ${text}`;
-        el.className = `status-badge ${className}`;
+        updateFaceMatcher();
+        refreshRegisteredList(); 
+        alert("Registered Successfully!");
+        document.getElementById('regName').value = "";
+        document.getElementById('regId').value = "";
+        document.getElementById('regClass').value = "";
+    } else { 
+        alert("Face not found! Try again."); 
     }
+    updateStatus("SYSTEM READY", "status-ready");
+}
 
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+window.adminAuth = function() {
+    if (document.getElementById('passInput').value === ADMIN_PASS) {
+        document.getElementById('loginCard').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        refreshRegisteredList();
+    } else { alert("Wrong Password"); }
+}
+
+window.logout = function() {
+    document.getElementById('loginCard').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('passInput').value = "";
+}
+
+window.updateFaceMatcher = function() {
+    if (registeredFaces.length === 0) { faceMatcher = null; return; }
+    const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
+    faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
+}
+
+window.refreshAttendanceTable = function() {
+    const tbody = document.getElementById('attendanceList');
+    const today = new Date().toLocaleDateString('th-TH');
+    const logs = attendanceData.filter(a => a.date === today);
+    document.querySelector('#logCount span').innerText = logs.length;
+    tbody.innerHTML = logs.map(a => {
+        const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
+        return `
+            <tr>
+                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ID: ${a.id}</small></td>
+                <td style="font-weight:500; color:#e2e8f0"><i class="far fa-clock" style="color:var(--text-muted); margin-right:5px;"></i>${a.time}</td>
+                <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+
+window.clearAttendanceHistory = function() {
+    if (confirm("⚠️ แน่ใจใช่ไหมที่จะล้าง 'ประวัติการเข้าเรียน' ในเครื่องนี้? \n\n*หมายเหตุ: หากต้องการลบประวัติแบบถาวรใน Cloud ต้องไปลบผ่าน Firebase Database ด้วยครับ")) {
+        attendanceData = [];
+        localStorage.setItem('att_history', JSON.stringify([]));
+        refreshAttendanceTable();
     }
+}
 
-    init();
+window.clearRegisteredFaces = function() {
+    if (confirm("🚨 ต้องการล้าง 'รายชื่อและข้อมูลใบหน้า' ออกจากเครื่องนี้ใช่หรือไม่? \n\n*หมายเหตุ: หากต้องการลบแบบถาวรใน Cloud ต้องไปลบผ่าน Firebase Database ด้วยครับ")) {
+        registeredFaces = [];
+        localStorage.setItem('att_faces', JSON.stringify([]));
+        refreshRegisteredList();
+        updateFaceMatcher();
+    }
+}
+
+window.exportCSV = function() {
+    let csv = "\uFEFFName,ID,Room,Date,Time,Status\n";
+    attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    link.download = `report_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`;
+    link.click();
+}
+
+window.exportExcel = function() {
+    if (attendanceData.length === 0) {
+        alert("ไม่มีข้อมูลสำหรับ Export");
+        return;
+    }
+    
+    const formattedData = attendanceData.map(r => ({
+        "Name (ชื่อ)": r.name,
+        "ID (รหัสนักเรียน)": r.id,
+        "Room (ห้องเรียน)": r.room,
+        "Date (วันที่)": r.date,
+        "Time (เวลา)": r.time,
+        "Status (สถานะ)": r.status
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(formattedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
+    
+    const dateStr = new Date().toLocaleDateString('th-TH').replace(/\//g, '-');
+    XLSX.writeFile(wb, `Attendance_Report_${dateStr}.xlsx`);
+}
+
+function updateStatus(text, className) {
+    const el = document.getElementById('statusLabel');
+    el.innerHTML = `<i class="fas fa-circle-info"></i> ${text}`;
+    el.className = `status-badge ${className}`;
+}
+
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+init();
 </script>
 </body>
 </html>
