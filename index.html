@@ -41,12 +41,37 @@
         header {
             background: rgba(9, 13, 22, 0.7);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            color: white; padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--glass-border);
+            color: white; padding: 15px 20px; border-bottom: 1px solid var(--glass-border);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); position: sticky; top: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
         header h1 { 
             margin: 0; font-size: 1.4rem; font-weight: 600;
-            background: linear-gradient(to right, #ffffff, #c7d2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(to right, #ffffff, #c7d2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px;
+        }
+        .live-clock {
+            text-align: right;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .live-clock .time {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-bright);
+            letter-spacing: 0.5px;
+        }
+        .live-clock .date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
         .container { display: grid; grid-template-columns: 1fr 500px; gap: 30px; padding: 30px; max-width: 1650px; margin: auto; }
         .card { 
@@ -129,17 +154,29 @@
         .dash-card span { font-size: 1.5rem; font-weight: 700; color: white; }
 
         @media (max-width: 1150px) { .container { grid-template-columns: 1fr; padding: 20px; } }                
-        @media (max-width: 768px) { .container { padding: 10px; } .recognized-block { flex-direction: column; text-align: center; } }
+        @media (max-width: 768px) { 
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .live-clock { text-align: left; width: 100%; }
+            .container { padding: 10px; } 
+            .recognized-block { flex-direction: column; text-align: center; } 
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3jZlVdxgEm6Vdo61ZcVRBBOPF4ga-xhdbiE71PP3dDqBHPc5YJ8BG7D8&s=10" 
-         alt="ตราโรงเรียนโคราชพิทยาคม" 
-         style="height: 70px; width: 70px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto 10px auto; border: 2px solid var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow);">
+    <div class="header-left">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3jZlVdxgEm6Vdo61ZcVRBBOPF4ga-xhdbiE71PP3dDqBHPc5YJ8BG7D8&s=10" 
+             alt="ตราโรงเรียนโคราชพิทยาคม" 
+             style="height: 65px; width: 65px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow);">
+        
+        <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1>
+    </div>
     
-    <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1>
+    <div class="live-clock">
+        <div class="time" id="liveTime">00:00:00</div>
+        <div class="date" id="liveDate">กำลังโหลดวันที่...</div>
+    </div>
 </header>
 
 <div class="container">    
@@ -287,6 +324,18 @@ const localMonthISO = `${todayObj.getFullYear()}-${String(todayObj.getMonth()+1)
 document.getElementById('filterDate').value = localDateISO;
 document.getElementById('dashDay').value = localDateISO;
 document.getElementById('dashMonth').value = localMonthISO;
+
+// ฟังก์ชันอัปเดตเวลาและวันที่เรียบร้อยแบบ Real-time
+function updateLiveClock() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+    const dateStr = now.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    document.getElementById('liveTime').innerText = timeStr;
+    document.getElementById('liveDate').innerText = dateStr;
+}
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
 
 window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
