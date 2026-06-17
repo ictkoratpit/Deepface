@@ -1,465 +1,147 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Attendance v2.2 - Admin Control</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-bright: #818cf8;
-            --primary-glow: rgba(99, 102, 241, 0.35);
-            --success: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.25);
-            --danger: #f43f5e;
-            --danger-glow: rgba(244, 63, 94, 0.25);
-            --warning: #f59e0b;
-            --dark-base: #090d16;
-            --glass-card: rgba(15, 23, 42, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
-        * { 
-            box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #090d16 100%);
-            background-size: 400% 400%;
-            animation: gradientBg 12s ease infinite;
-            margin: 0;
-            color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        @keyframes gradientBg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        header {
-            background: rgba(9, 13, 22, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.4rem; 
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            background: linear-gradient(to right, #ffffff, #c7d2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap; 
-        }
-
-        header h1 i {
-            color: var(--primary-bright);
-            filter: drop-shadow(0 0 8px var(--primary));
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 460px;
-            gap: 30px;
-            padding: 30px;
-            max-width: 1650px;
-            margin: auto;
-        }
-
-        .card {
-            background: var(--glass-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px; 
-            padding: 24px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            opacity: 0.5;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            background: #000;
-            border-radius: 20px;
-            overflow: hidden;
-            aspect-ratio: 4/3;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hud-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 10;
-            pointer-events: none;
-            background-image: 
-                linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
-        .video-container::before, .video-container::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border-color: var(--primary-bright);
-            border-style: solid;
-            z-index: 12;
-            opacity: 0.85;
-            pointer-events: none;
-        }
-        .video-container::before {
-            top: 15px; left: 15px;
-            border-width: 3px 0 0 3px;
-        }
-        .video-container::after {
-            bottom: 15px; right: 15px;
-            border-width: 0 3px 3px 0;
-        }
-
-        video { width: 100%; height: 100%; object-fit: cover; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
-
-        .status-badge { 
-            padding: 8px 18px; 
-            border-radius: 30px; 
-            font-weight: 600; 
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px; 
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .status-ready { 
-            background: var(--success-glow); 
-            color: #34d399; 
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            text-shadow: 0 0 4px var(--success);
-        }
-        .status-wait { 
-            background: rgba(245, 158, 11, 0.15); 
-            color: #fbbf24; 
-            border: 1px solid rgba(245, 158, 11, 0.4);
-        }
-
-        #displayName { 
-            font-size: 2.2rem; 
-            font-weight: 700;
-            background: linear-gradient(to right, #ffffff, var(--primary-bright), #f43f5e); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            margin: 8px 0;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
-            word-break: break-word;
-        }
-
-        .recognized-block {
-            margin-top: 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: rgba(0,0,0,0.15); 
-            padding: 20px; 
-            border-radius: 18px; 
-            border: 1px solid var(--glass-border);
-            gap: 15px;
-        }
-
-        .scroll-list {
-            max-height: 280px;
-            overflow-y: auto;
-            overflow-x: auto; 
-            border-radius: 14px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .scroll-list::-webkit-scrollbar { width: 6px; height: 6px; }
-        .scroll-list::-webkit-scrollbar-track { background: transparent; }
-        .scroll-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
-        .scroll-list::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px; }
-        tr { background: rgba(30, 41, 59, 0.4); border-radius: 12px; }
-        tr:hover { background: rgba(255, 255, 255, 0.05); }
-        td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; color: var(--text-main); }
-        th { font-weight: 500; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; white-space: nowrap; }
+<!DOCTYPE html><html lang="th"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>Smart Attendance v2.4 - Advanced Admin & Public Feed</title>        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>        <style>        :root {            --primary: #6366f1;            --primary-bright: #818cf8;            --primary-glow: rgba(99, 102, 241, 0.35);            --success: #10b981;            --success-glow: rgba(16, 185, 129, 0.25);            --danger: #f43f5e;            --danger-glow: rgba(244, 63, 94, 0.25);            --warning: #f59e0b;            --dark-base: #090d16;            --glass-card: rgba(15, 23, 42, 0.65);            --glass-border: rgba(255, 255, 255, 0.08);            --text-main: #f8fafc;            --text-muted: #94a3b8;        }
+        * { box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        body {            font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif;            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #090d16 100%);            background-size: 400% 400%;            animation: gradientBg 12s ease infinite;            margin: 0; color: var(--text-main); min-height: 100vh; overflow-x: hidden;        }
+        @keyframes gradientBg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        header {            background: rgba(9, 13, 22, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);            color: white; padding: 15px 20px; text-align: center; border-bottom: 1px solid var(--glass-border);            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); position: sticky; top: 0; z-index: 1000;        }
+        header h1 { margin: 0; font-size: 1.4rem; font-weight: 600; background: linear-gradient(to right, #ffffff, #c7d2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .container { display: grid; grid-template-columns: 1fr 500px; gap: 30px; padding: 30px; max-width: 1650px; margin: auto; }
+        .card { background: var(--glass-card); backdrop-filter: blur(16px); border-radius: 20px; padding: 24px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); margin-bottom: 25px; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5; }
+        .video-container { position: relative; width: 100%; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; justify-content: center; align-items: center; }
+        .hud-overlay { position: absolute; inset: 0; z-index: 10; pointer-events: none; background-image: linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px); background-size: 40px 40px; }
+        video { width: 100%; height: 100%; object-fit: cover; } canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
+        .status-badge { padding: 8px 18px; border-radius: 30px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .status-ready { background: var(--success-glow); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .status-wait { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        #displayName { font-size: 2.2rem; font-weight: 700; background: linear-gradient(to right, #ffffff, var(--primary-bright), #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 8px 0; }
+        .recognized-block { margin-top: 25px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15); padding: 20px; border-radius: 18px; border: 1px solid var(--glass-border); gap: 15px; }
+        .scroll-list { max-height: 350px; overflow-y: auto; overflow-x: auto; border-radius: 14px; background: rgba(0, 0, 0, 0.2); padding: 6px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .scroll-list::-webkit-scrollbar { width: 6px; height: 6px; } .scroll-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px; } tr { background: rgba(30, 41, 59, 0.4); border-radius: 12px; } td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; } th { font-weight: 500; color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
+        input, select { width: 100%; padding: 12px 16px; margin: 8px 0; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; color: white; font-family: inherit; font-size: 0.95rem; }
+        input:focus, select:focus { outline: none; border-color: var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow); }
+        button { width: 100%; padding: 12px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); color: white; } .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-del { color: #fda4af; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.2); padding: 6px 12px; border-radius: 8px; width: auto; } .btn-del:hover { background: var(--danger); color: white; }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        h3 { font-weight: 500; color: #e2e8f0; display: flex; align-items: center; gap: 10px; margin-top: 0; } h3 i { color: var(--primary-bright); }
         
-        input {
-            width: 100%;
-            padding: 14px 16px;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            color: white;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-        input:focus {
-            outline: none;
-            border-color: var(--primary-bright);
-            box-shadow: 0 0 15px var(--primary-glow);
-            background: rgba(0, 0, 0, 0.4);
-        }
+        /* Tabs System CSS */
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 10px 15px; border-radius: 10px; width: auto; white-space: nowrap; font-size: 0.85rem; }
+        .tab-btn.active { background: var(--primary-glow); border-color: var(--primary-bright); color: white; }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; } .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+        /* Dashboard Cards */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .dash-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; }
+        .dash-card h4 { margin: 0 0 5px 0; font-size: 0.8rem; color: var(--text-muted); }
+        .dash-card span { font-size: 1.5rem; font-weight: 700; color: white; }
 
-        .btn-primary { 
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); 
-            color: white; 
-        }
-        .btn-primary:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 20px var(--primary-glow);
-            filter: brightness(1.1);
-        }
-        .btn-primary:active { transform: translateY(0); }
+        @media (max-width: 1150px) { .container { grid-template-columns: 1fr; padding: 20px; } }                @media (max-width: 768px) { .container { padding: 10px; } .recognized-block { flex-direction: column; text-align: center; } }
+    </style></head><body>
+<header>    <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1></header>
+<div class="container">    
+    <div class="left-panel">        <div class="card">            <div id="statusLabel" class="status-badge status-wait">                <i class="fas fa-sync fa-spin"></i> LOADING AI SYSTEM...            </div>                        <div class="video-container">                <div class="hud-overlay"></div>                <video id="video" autoplay muted playsinline></video> <canvas id="overlay"></canvas>            </div>                        <div class="recognized-block">                <div>                    <small style="color: var(--text-muted); font-weight: 600;">LAST RECOGNIZED:</small>                    <h2 id="displayName">WAITING...</h2>                    <p id="displayTime" style="margin:5px 0 0 0; color: var(--primary-bright); font-weight: 500;">Please scan your face</p>                </div>                <div id="logCount" style="text-align:center; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); padding: 14px 22px; border-radius: 16px;">                    <span style="font-size: 1.8rem; color: var(--success); font-weight: 700;">0</span>                    <small style="color: var(--text-muted); display:block; font-size: 0.7rem;">TOTAL LOGS</small>                </div>            </div>        </div>    </div>
 
-        .btn-del {
-            color: #fda4af;
-            background: rgba(244, 63, 94, 0.15);
-            border: 1px solid rgba(244, 63, 94, 0.2);
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: auto;
-            box-shadow: none;
-        }
-        .btn-del:hover { background: var(--danger); color: white; border-color: transparent; box-shadow: 0 4px 12px var(--danger-glow); }
+    <div class="right-panel">        
+        <div class="card" id="loginCard">            <h3><i class="fas fa-shield-halved"></i> Admin Control</h3>            <input type="password" id="passInput" placeholder="Enter Admin Password">            <button class="btn-primary" onclick="adminAuth()">LOG IN AS ADMIN</button>        </div>
 
-        .status-pill {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        h3 {
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        h3 i { color: var(--primary-bright); }
-
-        @media (max-width: 1150px) { 
-            .container { grid-template-columns: 1fr; padding: 20px; } 
-        }
-        
-        @media (max-width: 768px) {
-            header h1 { font-size: 1.1rem; }
-            .container { padding: 10px; gap: 15px; }
-            .card { padding: 18px; }
-            
-            .video-container { aspect-ratio: 3/4; max-height: 60vh; } 
-            
-            .recognized-block { 
-                flex-direction: column; 
-                text-align: center; 
-                padding: 15px;
-            }
-            #displayName { font-size: 1.6rem; }
-            #logCount { width: 100%; }
-
-            .attendance-header {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 12px;
-            }
-            .attendance-header > div {
-                width: 100%;
-                display: flex;
-                gap: 8px;
-            }
-            .attendance-header button {
-                flex: 1; 
-                padding: 8px;
-                font-size: 0.8rem;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1>
-</header>
-
-<div class="container">
-    <div class="left-panel">
-        <div class="card">
-            <div id="statusLabel" class="status-badge status-wait">
-                <i class="fas fa-sync fa-spin"></i> LOADING AI SYSTEM...
-            </div>
-            
-            <div class="video-container">
-                <div class="hud-overlay"></div>
-                <video id="video" autoplay muted playsinline></video> <canvas id="overlay"></canvas>
-            </div>
-            
-            <div class="recognized-block">
-                <div>
-                    <small style="color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">LAST RECOGNIZED:</small>
-                    <h2 id="displayName">WAITING...</h2>
-                    <p id="displayTime" style="margin:5px 0 0 0; color: var(--primary-bright); font-weight: 500; font-size: 0.95rem;">Please scan your face</p>
-                </div>
-                <div id="logCount" style="text-align:center; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); color:white; padding: 14px 22px; border-radius: 16px; min-width: 100px;">
-                    <span style="font-size: 1.8rem; color: var(--success); font-weight: 700; display:block; line-height: 1.1;">0</span>
-                    <small style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px;">TOTAL LOGS</small>
-                </div>
+        <div class="card" id="publicAttendanceCard">
+            <h3 style="margin: 0 0 15px 0;"><i class="fas fa-list-check"></i> รายชื่อผู้ที่เข้าเรียนวันนี้</h3>
+            <div class="scroll-list" style="max-height: 450px;">
+                <table>
+                    <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
+                        <tr><th>ชื่อ-สกุล</th><th>เวลา</th><th>สถานะ</th></tr>
+                    </thead>
+                    <tbody id="publicAttendanceList">
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
 
-    <div class="right-panel">
-        <div class="card" id="loginCard">
-            <h3 style="margin-top:0"><i class="fas fa-shield-halved"></i> Admin Control</h3>
-            <input type="password" id="passInput" placeholder="Enter Admin Password">
-            <button class="btn-primary" onclick="adminAuth()">LOG IN AS ADMIN</button>
-        </div>
+        <div id="adminPanel" style="display:none;" class="card">
+            <button onclick="logout()" style="background:none; color: var(--danger); font-size: 0.85rem; width: auto; position: absolute; top: 15px; right: 15px; padding: 5px 10px; border: 1px solid rgba(244, 63, 94, 0.2);"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-cogs"></i> ระบบจัดการ (Admin)</h3>
 
-        <div id="adminPanel" style="display:none;">
-            <div class="card" style="border-left: 4px solid var(--primary);">
-                <h3 style="margin-top:0"><i class="fas fa-user-plus"></i> Register New User</h3>
-                <input id="regName" placeholder="Full Name">
-                <input id="regId" placeholder="Student ID" type="number">
-                <input id="regClass" placeholder="Class / Group">
-                <button class="btn-primary" onclick="registerFace()">
-                    <i class="fas fa-camera"></i> Scan & Save Profile
-                </button>
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('tab-users')"><i class="fas fa-users"></i> นักเรียน</button>
+                <button class="tab-btn" onclick="switchTab('tab-attendance')"><i class="fas fa-clock"></i> ประวัติ</button>
+                <button class="tab-btn" onclick="switchTab('tab-dashboard')"><i class="fas fa-chart-pie"></i> แดชบอร์ด</button>
             </div>
 
-            <div class="card" style="border-left: 4px solid var(--success);">
-                <h3 style="margin-top:0"><i class="fas fa-database"></i> Database (Registered)</h3>
+            <div id="tab-users" class="tab-pane active">
+                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;">+ ลงทะเบียนใบหน้าใหม่</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <input id="regName" placeholder="ชื่อ-สกุล">
+                        <input id="regId" placeholder="รหัสนักเรียน" type="number" style="width: 120px;">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <input id="regClass" placeholder="ห้อง (เช่น 1/1)">
+                        <button class="btn-primary" onclick="registerFace()"><i class="fas fa-camera"></i> สแกนบันทึก</button>
+                    </div>
+                </div>
+
+                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; justify-content: space-between;">
+                    <span><i class="fas fa-database"></i> ฐานข้อมูลนักเรียน</span>
+                    <button class="btn-del" onclick="clearRegisteredFaces()" style="font-size:0.7rem; padding: 3px 8px;"><i class="fas fa-users-slash"></i> ล้างทั้งหมด</button>
+                </h4>
+                <input type="text" id="searchUser" placeholder="🔍 ค้นหา ชื่อ, รหัส หรือ ห้อง..." onkeyup="refreshRegisteredList()" style="margin-bottom: 10px;">
                 <div class="scroll-list">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
-                            <tr>
-                                <th>Name</th>
-                                <th>ID/Class</th>
-                                <th style="text-align: center;">Action</th>
-                            </tr>
-                        </thead>
+                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;"><tr><th>ข้อมูล</th><th style="text-align:center;">จัดการ</th></tr></thead>
                         <tbody id="registeredList"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="card" style="border-left: 4px solid var(--danger);">
-                <h3 style="margin-top:0;"><i class="fas fa-sliders"></i> Data Management</h3>
-                <div style="display: flex; gap: 10px; flex-direction: column;">
-                    <button onclick="clearAttendanceHistory()" style="background: rgba(244, 63, 94, 0.15); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.3);">
-                        <i class="fas fa-clock-rotate-left"></i> ล้างประวัติเข้าเรียน (ในเครื่อง)
-                    </button>
-                    <button onclick="clearRegisteredFaces()" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3);">
-                        <i class="fas fa-users-slash"></i> ล้างรายชื่อนักเรียน (ในเครื่อง)
-                    </button>
-                    <small style="color: var(--text-muted); text-align: center; font-size: 0.75rem;">*หากต้องการลบข้อมูลทั้งหมดในระบบคลาวด์ ต้องไปลบผ่าน Firebase Console ด้วย</small>
+            <div id="tab-attendance" class="tab-pane">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <input type="date" id="filterDate" onchange="refreshAttendanceTable()" style="width: 60%;">
+                    <div style="display:flex; gap: 5px;">
+                        <button class="btn-primary" style="padding: 10px;" onclick="exportExcel()"><i class="fas fa-file-excel"></i></button>
+                        <button class="btn-del" style="padding: 10px;" onclick="clearAttendanceHistory()"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+                <div class="scroll-list">
+                    <table>
+                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;"><tr><th>ชื่อ/เวลา</th><th>สถานะ</th><th>ลบ</th></tr></thead>
+                        <tbody id="attendanceList"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <button onclick="logout()" style="background:none; color: var(--danger); font-size: 0.9rem; margin-bottom: 25px; box-shadow: none; border: 1px solid rgba(244, 63, 94, 0.2); background: rgba(244, 63, 94, 0.05);">
-                <i class="fas fa-sign-out-alt"></i> Logout Admin Mode
-            </button>
-        </div>
+            <div id="tab-dashboard" class="tab-pane">
+                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-chart-bar"></i> สรุปรายวัน (ตามห้อง)</h4>
+                <input type="date" id="dashDay" onchange="refreshDashboard()" style="margin-bottom: 10px;">
+                <div id="classDashContainer" class="dash-grid">
+                    </div>
 
-        <div class="card">
-            <div class="attendance-header" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin:0"><i class="fas fa-clock-rotate-left"></i> Today's Attendance</h3>
-                <div>
-                    <button id="exportBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px;" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
-                    <button id="exportExcelBtn" class="btn-primary" style="width:auto; padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+
+                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-calendar-times"></i> สรุปรายเดือน (จำนวนครั้งที่มาสาย)</h4>
+                <input type="month" id="dashMonth" onchange="refreshDashboard()" style="margin-bottom: 10px;">
+                <div class="scroll-list" style="max-height: 200px;">
+                    <table>
+                        <thead style="position: sticky; top: 0; background: #131c2e;"><tr><th>ชื่อ-สกุล (ห้อง)</th><th style="text-align:center; color:var(--danger)">สาย (ครั้ง)</th></tr></thead>
+                        <tbody id="monthlyLateList"></tbody>
+                    </table>
                 </div>
             </div>
-            <div class="scroll-list">
-                <table>
-                    <tbody id="attendanceList"></tbody>
-                </table>
-            </div>
+
         </div>
     </div>
 </div>
 
 <script type="module">
+// นำเข้า Firebase functions 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo",
-    authDomain: "deepface-74fbf.firebaseapp.com",
-    projectId: "deepface-74fbf",
-    storageBucket: "deepface-74fbf.firebasestorage.app",
-    messagingSenderId: "972480534547",
-    appId: "1:972480534547:web:76e3001f550be7ef8e07e6"
-};
-
+const firebaseConfig = { apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo", authDomain: "deepface-74fbf.firebaseapp.com", projectId: "deepface-74fbf", storageBucket: "deepface-74fbf.firebasestorage.app", messagingSenderId: "972480534547", appId: "1:972480534547:web:76e3001f550be7ef8e07e6"};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -469,53 +151,64 @@ const LATE_TIME = "08:00";
 const COOLDOWN = 10000;
 
 let faceMatcher = null;
-let attendanceData = JSON.parse(localStorage.getItem('att_history')) || [];
-let registeredFaces = JSON.parse(localStorage.getItem('att_faces')) || [];
+let attendanceData = [];
+let registeredFaces = [];
 let isScanning = false;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('overlay');
 
-// 1. ฟังก์ชันดักฟังใบหน้าจาก Firebase แบบ Real-time
+// ตั้งค่าวันที่ Default ให้ Input Types
+const todayObj = new Date();
+const localDateISO = `${todayObj.getFullYear()}-${String(todayObj.getMonth()+1).padStart(2,'0')}-${String(todayObj.getDate()).padStart(2,'0')}`;
+const localMonthISO = `${todayObj.getFullYear()}-${String(todayObj.getMonth()+1).padStart(2,'0')}`;
+
+document.getElementById('filterDate').value = localDateISO;
+document.getElementById('dashDay').value = localDateISO;
+document.getElementById('dashMonth').value = localMonthISO;
+
+// ระบบจัดการ Tabs
+window.switchTab = function(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+    
+    if(tabId === 'tab-dashboard') refreshDashboard();
+}
+
+// 1. ดักฟังใบหน้าจาก Firebase
 function listenFacesFromFirebase() {
     onSnapshot(collection(db, "faces"), (querySnapshot) => {
         const cloudFaces = [];
         querySnapshot.forEach((doc) => {
-            cloudFaces.push(doc.data());
+            const data = doc.data();
+            data.docId = doc.id; // เก็บ docId สำหรับอัปเดตและลบ
+            cloudFaces.push(data);
         });
-        
-        if(cloudFaces.length > 0) {
-            registeredFaces = cloudFaces; 
-            localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
-        }
+        registeredFaces = cloudFaces; 
         refreshRegisteredList(); 
         updateFaceMatcher();
-    }, (error) => {
-        console.error("Error listening faces from Firebase: ", error);
     });
 }
 
-// 2. ฟังก์ชันดักฟังประวัติเข้าเรียนจาก Firebase แบบ Real-time
+// 2. ดักฟังประวัติจาก Firebase
 function listenAttendanceFromFirebase() {
     onSnapshot(collection(db, "attendance"), (querySnapshot) => {
         const cloudAttendance = [];
         querySnapshot.forEach((doc) => {
-            cloudAttendance.push(doc.data());
+            const data = doc.data();
+            data.docId = doc.id; // เก็บ docId ไว้ใช้ลบข้อมูลบน Cloud
+            cloudAttendance.push(data);
         });
-        
-        // เรียงลำดับเวลาล่าสุดขึ้นก่อน
         cloudAttendance.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
         attendanceData = cloudAttendance; 
-        localStorage.setItem('att_history', JSON.stringify(attendanceData));
-        
-        // อัปเดตตารางประวัติบนจอทันทีที่มีคนสแกนหน้าผ่าน
         refreshAttendanceTable();
-    }, (error) => {
-        console.error("Error listening attendance: ", error);
+        refreshPublicAttendanceTable(); // <--- เรียกใช้อัปเดตตารางให้คนทั่วไปดู
+        if(document.getElementById('tab-dashboard').classList.contains('active')) refreshDashboard();
     });
 }
 
-// 3. เริ่มต้นระบบ (Init)
 async function init() {
     try {
         updateStatus("LOADING AI & CLOUD...", "status-wait");
@@ -524,24 +217,16 @@ async function init() {
             faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
             faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
         ]);
-        
-        // เปิดระบบดักฟัง Real-time
         listenFacesFromFirebase();
         listenAttendanceFromFirebase();
-
         updateStatus("SYSTEM READY", "status-ready");
         startVideo();
-    } catch (err) {
-        console.error(err);
-        updateStatus("AI ERROR", "status-wait");
-    }
+    } catch (err) { updateStatus("AI ERROR", "status-wait"); }
 }
 
 async function startVideo() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "user" } 
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
         video.srcObject = stream;
         video.onloadedmetadata = () => {
             video.play();
@@ -549,48 +234,39 @@ async function startVideo() {
             faceapi.matchDimensions(canvas, displaySize);
             setInterval(runScanner, 200);
         };
-    } catch (e) { alert("Camera Denied or Not Supported"); }
+    } catch (e) { alert("Camera Denied"); }
 }
 
 async function runScanner() {
     if (!faceMatcher || isScanning) return;
     isScanning = true;
-
     try {
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
-            .withFaceLandmarks()
-            .withFaceDescriptors();
-
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 })).withFaceLandmarks().withFaceDescriptors();
         const displaySize = { width: video.videoWidth, height: video.videoHeight };
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         const resized = faceapi.resizeResults(detections, displaySize);
 
         resized.forEach(det => {
             const result = faceMatcher.findBestMatch(det.descriptor);
             if (result.label !== 'unknown' && result.distance < 0.45) {
-                new faceapi.draw.DrawBox(det.detection.box, { 
-                    label: result.label.split('|')[0], 
-                    boxColor: '#6366f1' 
-                }).draw(canvas);
+                new faceapi.draw.DrawBox(det.detection.box, { label: result.label.split('|')[0], boxColor: '#6366f1' }).draw(canvas);
                 processAttendance(result.label);
             }
         });
-    } catch (error) {
-        console.error("Scanner error:", error);
-    } finally {
-        isScanning = false;
-    }
+    } catch (e) {} finally { isScanning = false; }
 }
 
 window.processAttendance = async function(label) {
     const [name, id, room] = label.split('|');
     const now = new Date();
-    const dateStr = now.toLocaleDateString('th-TH');
-    const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
     
-    const lastLog = attendanceData.find(a => a.id === id && a.date === dateStr);
+    // จัดฟอร์แมตวันที่สำหรับการค้นหาในฐานข้อมูลและแดชบอร์ด
+    const dateValue = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const dateStr = now.toLocaleDateString('th-TH'); // สำหรับแสดงผล
+    const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+        
+    const lastLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
     if (lastLog) {
         const [lH, lM, lS] = lastLog.time.split(':');
         const lTime = new Date(); lTime.setHours(lH, lM, lS);
@@ -598,88 +274,97 @@ window.processAttendance = async function(label) {
     }
 
     const status = timeStr > LATE_TIME ? "LATE" : "ON TIME";
-    const entry = { 
-        name, id, room, 
-        date: dateStr, 
-        time: timeStr, 
-        status: status,
-        timestamp: now.toISOString() 
-    };
-    
-    // บันทึกลงเครื่อง (Local) ชั่วคราวเพื่อให้ UI ตอบสนองทันที
-    attendanceData.unshift(entry);
-    localStorage.setItem('att_history', JSON.stringify(attendanceData));
-    
-    // บันทึกลงฐานข้อมูล Firebase (Cloud)
+    const entry = { name, id, room, dateValue: dateValue, date: dateStr, time: timeStr, status: status, timestamp: now.toISOString() };
+        
     try {
         await addDoc(collection(db, "attendance"), entry);
-    } catch (e) {
-        console.error("Firebase Error: ", e);
-    }
-    
-    document.getElementById('displayName').innerText = name;
-    document.getElementById('displayTime').innerHTML = `<i class="fas fa-circle-check" style="color:var(--success)"></i> CHECKED IN AT ${timeStr}`;
-    refreshAttendanceTable();
-    playNotification(name, status);
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('displayTime').innerHTML = `<i class="fas fa-circle-check" style="color:var(--success)"></i> CHECKED IN AT ${timeStr}`;
+        playNotification(name, status);
+    } catch (e) { console.error(e); }
 }
 
 window.playNotification = function(studentName, status) {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(987.77, audioCtx.currentTime + 0.08);
-        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.12);
-
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const statusSpeech = status === "LATE" ? "มาสายครับ" : "มาทันเวลาครับ";
             const utterance = new SpeechSynthesisUtterance(`${studentName} ${statusSpeech}`);
             utterance.lang = 'th-TH';
-            const voices = window.speechSynthesis.getVoices();
-            const thaiVoice = voices.find(v => v.lang === 'th-TH' || v.lang.includes('th'));
-            if (thaiVoice) utterance.voice = thaiVoice;
-            utterance.rate = 1.15;
-            utterance.pitch = 1.25;
+            utterance.rate = 1.15; utterance.pitch = 1.25;
             window.speechSynthesis.speak(utterance);
         }
-    } catch (error) {
-        console.error("Audio error:", error);
-    }
+    } catch (e) {}
 }
 
-window.refreshRegisteredList = function() {
-    const tbody = document.getElementById('registeredList');
-    tbody.innerHTML = registeredFaces.map((f, index) => {
-        const [name, id, room] = f.label.split('|');
+// ตาราง Public: โชว์รายชื่อเด็กที่มาเรียนวันนี้ (ให้ทุกคนดูได้)
+window.refreshPublicAttendanceTable = function() {
+    const tbody = document.getElementById('publicAttendanceList');
+    if(!tbody) return;
+    
+    // กรองเอาเฉพาะข้อมูลของวันนี้เท่านั้น
+    const logs = attendanceData.filter(a => a.dateValue === localDateISO || (!a.dateValue && a.timestamp && a.timestamp.startsWith(localDateISO)));
+    
+    document.querySelector('#logCount span').innerText = logs.length;
+
+    if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">ยังไม่มีคนมาเรียนในวันนี้</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = logs.map(a => {
+        const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
         return `
             <tr>
-                <td><strong style="color:#fff">${name}</strong></td>
-                <td style="color:var(--text-muted)">${id} <br><small style="color:var(--primary-bright)">ห้อง ${room}</small></td>
-                <td style="text-align: center;">
-                    <button class="btn-del" onclick="deleteFace(${index})">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${a.room || '-'}</small></td>
+                <td><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
+                <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+
+
+// โชว์รายชื่อนักเรียน พร้อมฟิลเตอร์การค้นหา (ฟีเจอร์ 1)
+window.refreshRegisteredList = function() {
+    const tbody = document.getElementById('registeredList');
+    const query = document.getElementById('searchUser').value.toLowerCase();
+    
+    const filtered = registeredFaces.filter(f => f.label.toLowerCase().includes(query));
+    
+    tbody.innerHTML = filtered.map((f, index) => {
+        const [name, id, room] = f.label.split('|');
+        // ต้องหา Index ต้นฉบับเพื่อเวลาอัปเดตจะได้ถูกตัว
+        const originalIndex = registeredFaces.findIndex(rf => rf.docId === f.docId);
+        
+        return `
+            <tr>
+                <td><strong style="color:#fff">${name}</strong><br><small style="color:var(--text-muted)">ID: ${id} | ห้อง ${room}</small></td>
+                <td style="text-align: center; white-space: nowrap;">
+                    <button class="btn-del" onclick="editFaceName(${originalIndex})" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 6px;"><i class="fas fa-edit"></i></button>
+                    <button class="btn-del" onclick="deleteFace(${originalIndex})" style="padding: 6px;"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `;
     }).join('');
 }
 
-window.deleteFace = function(index) {
-    if (confirm("ลบโปรไฟล์นี้หรือไม่? (เป็นการลบแค่ในเครื่องเท่านั้น)")) {
-        registeredFaces.splice(index, 1);
-        localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
-        refreshRegisteredList();
-        updateFaceMatcher();
+window.editFaceName = async function(index) {
+    const faceToEdit = registeredFaces[index];
+    const [oldName, id, room] = faceToEdit.label.split('|');
+    const newName = prompt("แก้ไขชื่อนักเรียน:", oldName);
+    if (newName && newName !== oldName && faceToEdit.docId) {
+        try {
+            await updateDoc(doc(db, "faces", faceToEdit.docId), { label: `${newName}|${id}|${room}` });
+            alert("อัปเดตเรียบร้อย");
+        } catch (error) { alert("เกิดข้อผิดพลาด"); }
+    }
+}
+
+window.deleteFace = async function(index) {
+    const faceToDelete = registeredFaces[index];
+    if (confirm(`ยืนยันการลบ ${faceToDelete.label.split('|')[0]} ?`) && faceToDelete.docId) {
+        try { await deleteDoc(doc(db, "faces", faceToDelete.docId)); } catch (error) { alert("เกิดข้อผิดพลาด"); }
     }
 }
 
@@ -687,48 +372,141 @@ window.registerFace = async function() {
     const name = document.getElementById('regName').value;
     const id = document.getElementById('regId').value;
     const room = document.getElementById('regClass').value || '-';
-    if (!name || !id) return alert("Fill Name and ID");
+    if (!name || !id) return alert("กรุณาใส่ชื่อและรหัส");
 
     updateStatus("CAPTURING FACE...", "status-wait");
     const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224 })).withFaceLandmarks().withFaceDescriptor();
-    
     if (det) {
-        const newFace = { 
-            label: `${name}|${id}|${room}`, 
-            descriptor: Array.from(det.descriptor) 
-        };
-        
-        registeredFaces.push(newFace);
-        localStorage.setItem('att_faces', JSON.stringify(registeredFaces));
-        
         try {
-            await addDoc(collection(db, "faces"), newFace);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-
-        updateFaceMatcher();
-        refreshRegisteredList(); 
-        alert("Registered Successfully!");
-        document.getElementById('regName').value = "";
-        document.getElementById('regId').value = "";
-        document.getElementById('regClass').value = "";
-    } else { 
-        alert("Face not found! Try again."); 
-    }
+            await addDoc(collection(db, "faces"), { label: `${name}|${id}|${room}`, descriptor: Array.from(det.descriptor) });
+            alert("ลงทะเบียนสำเร็จ!");
+            document.getElementById('regName').value = ""; document.getElementById('regId').value = ""; document.getElementById('regClass').value = "";
+        } catch (e) { alert("เกิดข้อผิดพลาดในการบันทึก"); }
+    } else { alert("ไม่พบใบหน้า กรุณาลองใหม่"); }
     updateStatus("SYSTEM READY", "status-ready");
 }
+
+// ตารางประวัติการเข้าเรียน (แอดมินเท่านั้น)
+window.refreshAttendanceTable = function() {
+    const tbody = document.getElementById('attendanceList');
+    const selectedDate = document.getElementById('filterDate').value; // YYYY-MM-DD
+    
+    // กรองประวัติให้ตรงกับวันที่เลือก 
+    const logs = attendanceData.filter(a => a.dateValue === selectedDate || (!a.dateValue && a.timestamp && a.timestamp.startsWith(selectedDate)));
+    
+    tbody.innerHTML = logs.map((a, i) => {
+        const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
+        // ใช้ docId ส่งไปเพื่อลบจาก Database ตรงๆ
+        return `
+            <tr>
+                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
+                <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+                <td style="text-align:center;">
+                    <button class="btn-del" onclick="deleteSingleAttendance('${a.docId}')" style="padding: 4px 8px; font-size: 0.7rem;"><i class="fas fa-times"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// ลบประวัติ 1 รายการ แบบถาวร (ฟีเจอร์ 2)
+window.deleteSingleAttendance = async function(docId) {
+    if(!docId) return alert("ข้อมูลเก่าเกินไป ไม่สามารถลบรายตัวได้ กรุณาใช้ปุ่มล้างทั้งหมด");
+    if(confirm("ต้องการลบประวัตินี้ใช่หรือไม่?")) {
+        try { await deleteDoc(doc(db, "attendance", docId)); } catch(e) { alert("ลบไม่สำเร็จ"); }
+    }
+}
+
+// ล้างประวัติทั้งหมดจาก Database ถาวร (อัปเดตฟีเจอร์ 2)
+window.clearAttendanceHistory = async function() {
+    if (confirm("⚠️ อันตราย! คุณกำลังจะลบ 'ประวัติการเข้าเรียนทั้งหมด' ออกจากฐานข้อมูล Cloud อย่างถาวร ยืนยันหรือไม่?")) {
+        let count = 0;
+        for(let a of attendanceData) {
+            if(a.docId) {
+                await deleteDoc(doc(db, "attendance", a.docId));
+                count++;
+            }
+        }
+        alert(`ลบข้อมูลเรียบร้อยแล้ว ${count} รายการ`);
+    }
+}
+
+window.clearRegisteredFaces = async function() {
+    if (confirm("🚨 อันตราย! ต้องการล้าง 'รายชื่อและข้อมูลใบหน้าทั้งหมด' ถาวรใช่หรือไม่?")) {
+        for(let f of registeredFaces) {
+            if(f.docId) await deleteDoc(doc(db, "faces", f.docId));
+        }
+        alert("ล้างฐานข้อมูลนักเรียนเรียบร้อย");
+    }
+}
+
+// ระบบ Dashboard สถิติ (ฟีเจอร์ 4 และ 5)
+window.refreshDashboard = function() {
+    const dashDay = document.getElementById('dashDay').value; // YYYY-MM-DD
+    const dashMonth = document.getElementById('dashMonth').value; // YYYY-MM
+    
+    // --- ส่วนที่ 1: สรุปรายวันแยกตามห้อง (Class Dashboard) ---
+    const dayLogs = attendanceData.filter(a => a.dateValue === dashDay || (!a.dateValue && a.timestamp && a.timestamp.startsWith(dashDay)));
+    const classStats = {};
+    
+    dayLogs.forEach(log => {
+        const room = log.room || 'ไม่ระบุ';
+        if(!classStats[room]) classStats[room] = { total: 0, ontime: 0, late: 0 };
+        classStats[room].total++;
+        if(log.status === 'LATE') classStats[room].late++;
+        else classStats[room].ontime++;
+    });
+
+    const dashContainer = document.getElementById('classDashContainer');
+    if(Object.keys(classStats).length === 0) {
+        dashContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">ไม่มีข้อมูลการเข้าเรียนในวันนี้</div>`;
+    } else {
+        dashContainer.innerHTML = Object.entries(classStats).sort((a,b)=>a[0].localeCompare(b[0])).map(([room, stat]) => `
+            <div class="dash-card">
+                <h4>ห้อง ${room}</h4>
+                <div style="font-size: 0.75rem; color: var(--success); margin-top:5px;">มาทัน: ${stat.ontime}</div>
+                <div style="font-size: 0.75rem; color: var(--danger);">มาสาย: ${stat.late}</div>
+                <hr style="border-color: rgba(255,255,255,0.05); margin: 5px 0;">
+                <span style="font-size: 1.1rem;">รวม ${stat.total}</span>
+            </div>
+        `).join('');
+    }
+
+    // --- ส่วนที่ 2: สถิติมาสายรายเดือนของนักเรียน ---
+    const monthLogs = attendanceData.filter(a => a.dateValue && a.dateValue.startsWith(dashMonth));
+    const studentLateStats = {};
+    
+    monthLogs.forEach(log => {
+        if(!studentLateStats[log.id]) studentLateStats[log.id] = { name: log.name, room: log.room, lateCount: 0 };
+        if(log.status === 'LATE') studentLateStats[log.id].lateCount++;
+    });
+
+    // กรองเฉพาะคนที่มาสาย > 0 และเรียงลำดับจากสายมากไปน้อย
+    const lateListHTML = Object.values(studentLateStats)
+        .filter(s => s.lateCount > 0)
+        .sort((a, b) => b.lateCount - a.lateCount)
+        .map(s => `
+            <tr>
+                <td><strong style="color:#fff">${s.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${s.room || '-'}</small></td>
+                <td style="text-align:center; color:var(--danger); font-size:1.2rem; font-weight:700;">${s.lateCount}</td>
+            </tr>
+        `).join('');
+
+    document.getElementById('monthlyLateList').innerHTML = lateListHTML || `<tr><td colspan="2" style="text-align:center; color:var(--success);">เดือนนี้ไม่มีนักเรียนมาสายเลย 🎉</td></tr>`;
+}
+
 
 window.adminAuth = function() {
     if (document.getElementById('passInput').value === ADMIN_PASS) {
         document.getElementById('loginCard').style.display = 'none';
+        document.getElementById('publicAttendanceCard').style.display = 'none'; // ซ่อนตารางเด็กเมื่อเข้า admin
         document.getElementById('adminPanel').style.display = 'block';
-        refreshRegisteredList();
-    } else { alert("Wrong Password"); }
+    } else { alert("รหัสผ่านไม่ถูกต้อง"); }
 }
 
 window.logout = function() {
     document.getElementById('loginCard').style.display = 'block';
+    document.getElementById('publicAttendanceCard').style.display = 'block'; // แสดงตารางเด็กอีกครั้ง
     document.getElementById('adminPanel').style.display = 'none';
     document.getElementById('passInput').value = "";
 }
@@ -739,70 +517,16 @@ window.updateFaceMatcher = function() {
     faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
 }
 
-window.refreshAttendanceTable = function() {
-    const tbody = document.getElementById('attendanceList');
-    const today = new Date().toLocaleDateString('th-TH');
-    const logs = attendanceData.filter(a => a.date === today);
-    document.querySelector('#logCount span').innerText = logs.length;
-    tbody.innerHTML = logs.map(a => {
-        const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
-        return `
-            <tr>
-                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ID: ${a.id}</small></td>
-                <td style="font-weight:500; color:#e2e8f0"><i class="far fa-clock" style="color:var(--text-muted); margin-right:5px;"></i>${a.time}</td>
-                <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
-            </tr>
-        `;
-    }).join('');
-}
-
-window.clearAttendanceHistory = function() {
-    if (confirm("⚠️ แน่ใจใช่ไหมที่จะล้าง 'ประวัติการเข้าเรียน' ในเครื่องนี้? \n\n*หมายเหตุ: หากต้องการลบประวัติแบบถาวรใน Cloud ต้องไปลบผ่าน Firebase Database ด้วยครับ")) {
-        attendanceData = [];
-        localStorage.setItem('att_history', JSON.stringify([]));
-        refreshAttendanceTable();
-    }
-}
-
-window.clearRegisteredFaces = function() {
-    if (confirm("🚨 ต้องการล้าง 'รายชื่อและข้อมูลใบหน้า' ออกจากเครื่องนี้ใช่หรือไม่? \n\n*หมายเหตุ: หากต้องการลบแบบถาวรใน Cloud ต้องไปลบผ่าน Firebase Database ด้วยครับ")) {
-        registeredFaces = [];
-        localStorage.setItem('att_faces', JSON.stringify([]));
-        refreshRegisteredList();
-        updateFaceMatcher();
-    }
-}
-
-window.exportCSV = function() {
-    let csv = "\uFEFFName,ID,Room,Date,Time,Status\n";
-    attendanceData.forEach(r => csv += `${r.name},${r.id},${r.room},${r.date},${r.time},${r.status}\n`);
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-    link.download = `report_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`;
-    link.click();
-}
-
 window.exportExcel = function() {
-    if (attendanceData.length === 0) {
-        alert("ไม่มีข้อมูลสำหรับ Export");
-        return;
-    }
+    const selectedDate = document.getElementById('filterDate').value;
+    const logs = attendanceData.filter(a => a.dateValue === selectedDate || (!a.dateValue && a.timestamp && a.timestamp.startsWith(selectedDate)));
     
-    const formattedData = attendanceData.map(r => ({
-        "Name (ชื่อ)": r.name,
-        "ID (รหัสนักเรียน)": r.id,
-        "Room (ห้องเรียน)": r.room,
-        "Date (วันที่)": r.date,
-        "Time (เวลา)": r.time,
-        "Status (สถานะ)": r.status
-    }));
-
+    if (logs.length === 0) return alert("ไม่มีข้อมูลสำหรับวันที่เลือก");
+    const formattedData = logs.map(r => ({ "ชื่อ": r.name, "รหัสนักเรียน": r.id, "ห้องเรียน": r.room, "วันที่": r.date, "เวลา": r.time, "สถานะ": r.status }));
     const ws = XLSX.utils.json_to_sheet(formattedData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
-    
-    const dateStr = new Date().toLocaleDateString('th-TH').replace(/\//g, '-');
-    XLSX.writeFile(wb, `Attendance_Report_${dateStr}.xlsx`);
+    XLSX.writeFile(wb, `Attendance_Report_${selectedDate}.xlsx`);
 }
 
 function updateStatus(text, className) {
@@ -811,12 +535,5 @@ function updateStatus(text, className) {
     el.className = `status-badge ${className}`;
 }
 
-if ('speechSynthesis' in window) {
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-
 init();
-</script>
-</body>
-</html>
+</script></body></html>
