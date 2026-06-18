@@ -24,7 +24,8 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
-        * { box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         body {
             font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #090d16 100%);
@@ -34,16 +35,20 @@
             min-height: 100vh; overflow-x: hidden;
         }
         @keyframes gradientBg { 
-            0% { background-position: 0% 50%; } 
-            50% { background-position: 100% 50%; } 
-            100% { background-position: 0% 50%; } 
+            0% { background-position: 0% 50%;
+            } 
+            50% { background-position: 100% 50%;
+            } 
+            100% { background-position: 0% 50%;
+            } 
         }
         header {
             background: rgba(9, 13, 22, 0.7);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             color: white; padding: 15px 20px; border-bottom: 1px solid var(--glass-border);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); position: sticky; top: 0; z-index: 1000;
-            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 20px;
         }
         .header-left {
             display: flex;
@@ -51,7 +56,8 @@
             gap: 20px;
         }
         header h1 { 
-            margin: 0; font-size: 1.4rem; font-weight: 600;
+            margin: 0;
+            font-size: 1.4rem; font-weight: 600;
             background: linear-gradient(to right, #ffffff, #c7d2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px;
         }
         .live-clock {
@@ -73,12 +79,17 @@
             color: var(--text-muted);
             margin-top: 2px;
         }
-        .container { display: grid; grid-template-columns: 1fr 500px; gap: 30px; padding: 30px; max-width: 1650px; margin: auto; }
+        .container { display: grid; grid-template-columns: 1fr 500px;
+            gap: 30px; padding: 30px; max-width: 1650px; margin: auto; }
         .card { 
-            background: var(--glass-card); backdrop-filter: blur(16px); border-radius: 20px;
-            padding: 24px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); margin-bottom: 25px; position: relative; overflow: hidden;
+            background: var(--glass-card);
+            backdrop-filter: blur(16px); border-radius: 20px;
+            padding: 24px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); margin-bottom: 25px;
+            position: relative; overflow: hidden;
         }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5; }
+        .card::before { content: ''; position: absolute; top: 0;
+            left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5;
+        }
         .video-container { 
             position: relative;
             width: 100%; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3;
@@ -86,79 +97,118 @@
             display: flex; justify-content: center; align-items: center; 
         }
         .hud-overlay { 
-            position: absolute; inset: 0;
+            position: absolute;
+            inset: 0;
             z-index: 10; pointer-events: none; background-image: linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
             background-size: 40px 40px; 
         }
-        video { width: 100%; height: 100%; object-fit: cover; } 
-        canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
+        video { width: 100%; height: 100%; object-fit: cover;
+        } 
+        canvas { position: absolute; top: 0; left: 0; z-index: 5;
+            width: 100%; height: 100%; object-fit: cover; }
         .status-badge { 
-            padding: 8px 18px; border-radius: 30px; font-weight: 600; display: inline-flex;
+            padding: 8px 18px;
+            border-radius: 30px; font-weight: 600; display: inline-flex;
             align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .status-ready { background: var(--success-glow); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-        .status-wait { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .status-ready { background: var(--success-glow); color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4); }
+        .status-wait { background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
         #displayName { 
             font-size: 2.2rem;
             font-weight: 700; background: linear-gradient(to right, #ffffff, var(--primary-bright), #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 8px 0;
         }
         .recognized-block { 
-            margin-top: 25px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15);
+            margin-top: 25px;
+            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15);
             padding: 20px; border-radius: 18px; border: 1px solid var(--glass-border); gap: 15px;
         }
         .scroll-list { 
-            max-height: 350px; overflow-y: auto; overflow-x: auto; border-radius: 14px;
+            max-height: 350px;
+            overflow-y: auto; overflow-x: auto; border-radius: 14px;
             background: rgba(0, 0, 0, 0.2); padding: 6px; border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .scroll-list::-webkit-scrollbar { width: 6px; height: 6px; } 
-        .scroll-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px; } 
-        tr { background: rgba(30, 41, 59, 0.4); border-radius: 12px; } 
-        td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; } 
-        th { font-weight: 500; color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
-        input, select { 
-            width: 100%; padding: 12px 16px; margin: 8px 0;
-            background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; color: white; font-family: inherit; font-size: 0.95rem;
+        .scroll-list::-webkit-scrollbar { width: 6px; height: 6px;
+        } 
+        .scroll-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px;
         }
-        input:focus, select:focus { outline: none; border-color: var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow); }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px;
+        } 
+        tr { background: rgba(30, 41, 59, 0.4); border-radius: 12px;
+        } 
+        td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem;
+        } 
+        th { font-weight: 500; color: var(--text-muted); font-size: 0.75rem; white-space: nowrap;
+        }
+        input, select { 
+            width: 100%;
+            padding: 12px 16px; margin: 8px 0;
+            background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;
+            color: white; font-family: inherit; font-size: 0.95rem;
+        }
+        input:focus, select:focus { outline: none;
+            border-color: var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow); }
         button { 
-            width: 100%; padding: 12px; border-radius: 14px; border: none; font-weight: 600;
+            width: 100%;
+            padding: 12px; border-radius: 14px; border: none; font-weight: 600;
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); color: white; } 
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); color: white;
+        } 
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px);
+        }
         .btn-del { 
             color: #fda4af;
             background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.2); padding: 6px 12px; border-radius: 8px; width: auto;
         } 
-        .btn-del:hover { background: var(--danger); color: white; }
-        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
-        h3 { font-weight: 500; color: #e2e8f0; display: flex; align-items: center; gap: 10px; margin-top: 0; } 
-        h3 i { color: var(--primary-bright); }
+        .btn-del:hover { background: var(--danger); color: white;
+        }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+            display: inline-block; }
+        h3 { font-weight: 500; color: #e2e8f0; display: flex; align-items: center;
+            gap: 10px; margin-top: 0; } 
+        h3 i { color: var(--primary-bright);
+        }
         
         /* Tabs System CSS */
-        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-nav { display: flex;
+            gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .tab-btn { 
             background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 10px 15px; border-radius: 10px; width: auto; white-space: nowrap; font-size: 0.85rem;
         }
-        .tab-btn.active { background: var(--primary-glow); border-color: var(--primary-bright); color: white; }
-        .tab-pane { display: none; animation: fadeIn 0.3s ease; } 
-        .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-btn.active { background: var(--primary-glow); border-color: var(--primary-bright); color: white;
+        }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease;
+        } 
+        .tab-pane.active { display: block;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px);
+        } to { opacity: 1; transform: translateY(0); } }
 
         /* Dashboard Cards */
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        .dash-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; }
-        .dash-card h4 { margin: 0 0 5px 0; font-size: 0.8rem; color: var(--text-muted); }
-        .dash-card span { font-size: 1.5rem; font-weight: 700; color: white; }
+        .dash-grid { display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .dash-card { background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center;
+        }
+        .dash-card h4 { margin: 0 0 5px 0; font-size: 0.8rem; color: var(--text-muted);
+        }
+        .dash-card span { font-size: 1.5rem; font-weight: 700; color: white;
+        }
 
-        @media (max-width: 1150px) { .container { grid-template-columns: 1fr; padding: 20px; } }                
+        @media (max-width: 1150px) { .container { grid-template-columns: 1fr; padding: 20px;
+        } }                
         @media (max-width: 768px) { 
-            header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .live-clock { text-align: left; width: 100%; }
-            .container { padding: 10px; } 
-            .recognized-block { flex-direction: column; text-align: center; } 
+            header { flex-direction: column;
+                align-items: flex-start; gap: 10px; }
+            .live-clock { text-align: left;
+                width: 100%; }
+            .container { padding: 10px;
+            } 
+            .recognized-block { flex-direction: column; text-align: center;
+            } 
         }
     </style>
 </head>
@@ -173,6 +223,7 @@
         <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1>
     </div>
     
+  
     <div class="live-clock">
         <div class="time" id="liveTime">00:00:00</div>
         <div class="date" id="liveDate">กำลังโหลดวันที่...</div>
@@ -183,112 +234,147 @@
     <div class="left-panel">        
         <div class="card">            
             <div id="statusLabel" class="status-badge status-wait">                
+   
                 <i class="fas fa-sync fa-spin"></i> LOADING AI SYSTEM...            
             </div>             
             <div class="video-container">                
+               
                 <div class="hud-overlay"></div>                
                 <video id="video" autoplay muted playsinline></video> 
                 <canvas id="overlay"></canvas>            
-            </div>                        
+            </div>                    
+     
             <div class="recognized-block">            
                 <div>                    
-                    <small style="color: var(--text-muted); font-weight: 600;">LAST RECOGNIZED:</small>                    
+                    <small style="color: var(--text-muted);
+                        font-weight: 600;">LAST RECOGNIZED:</small>                    
                     <h2 id="displayName">WAITING...</h2>                    
-                    <p id="displayTime" style="margin:5px 0 0 0; color: var(--primary-bright); font-weight: 500;">Please scan your face</p>                
+                    <p id="displayTime" style="margin:5px 0 0 0;
+                        color: var(--primary-bright); font-weight: 500;">Please scan your face</p>                
                 </div>  
-                <div id="logCount" style="text-align:center; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); padding: 14px 22px; border-radius: 16px;">                    
-                    <span style="font-size: 1.8rem; color: var(--success); font-weight: 700;">0</span>                    
-                    <small style="color: var(--text-muted); display:block; font-size: 0.7rem;">TOTAL LOGS</small>                
+                <div id="logCount" style="text-align:center;
+                    background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); padding: 14px 22px;
+                    border-radius: 16px;">                    
+                    <span style="font-size: 1.8rem;
+                        color: var(--success); font-weight: 700;">0</span>                    
+                    <small style="color: var(--text-muted);
+                        display:block; font-size: 0.7rem;">TOTAL LOGS</small>                
                 </div>            
             </div>        
         </div>    
     </div>
 
     <div class="right-panel">        
+    
         <div class="card" id="loginCard">            
             <h3><i class="fas fa-shield-halved"></i> Admin Control</h3>            
             <input type="password" id="passInput" placeholder="Enter Admin Password"> 
             <button class="btn-primary" onclick="adminAuth()">LOG IN AS ADMIN</button>        
         </div>
 
+   
         <div class="card" id="publicAttendanceCard">
-            <h3 style="margin: 0 0 15px 0;"><i class="fas fa-list-check"></i> รายชื่อผู้ที่เข้าเรียนวันนี้</h3>
+            <h3 style="margin: 0 0 15px 0;"><i class="fas fa-list-check"></i> รายชื่อผู้ที่เข้าเรียน</h3>
             <div class="scroll-list" style="max-height: 450px;">
                 <table>
-                    <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
+                    <thead style="position: sticky;
+                        top: 0; background: #131c2e; z-index: 1;">
                         <tr><th>ชื่อ-สกุล</th><th>เวลา</th><th>สถานะ</th></tr>
                     </thead>
                     <tbody id="publicAttendanceList">
-                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">กำลังโหลดข้อมูล...</td></tr>
+                        <tr><td colspan="3" style="text-align:center;
+                            color:var(--text-muted);">กำลังโหลดข้อมูล...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div id="adminPanel" style="display:none;" class="card">
-            <button onclick="logout()" style="background:none; color: var(--danger); font-size: 0.85rem; width: auto; position: absolute; top: 15px; right: 15px; padding: 5px 10px; border: 1px solid rgba(244, 63, 94, 0.2);"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <button onclick="logout()" style="background:none;
+                color: var(--danger); font-size: 0.85rem; width: auto; position: absolute; top: 15px; right: 15px; padding: 5px 10px;
+                border: 1px solid rgba(244, 63, 94, 0.2);"><i class="fas fa-sign-out-alt"></i> Logout</button>
             <h3 style="margin-bottom: 20px;"><i class="fas fa-cogs"></i> ระบบจัดการ (Admin)</h3>
 
             <div class="tab-nav">
                 <button class="tab-btn active" onclick="switchTab('tab-users')"><i class="fas fa-users"></i> นักเรียน</button>
                 <button class="tab-btn" onclick="switchTab('tab-attendance')"><i class="fas fa-clock"></i> ประวัติ</button>
-                <button class="tab-btn" onclick="switchTab('tab-dashboard')"><i class="fas fa-chart-pie"></i> แดชบอร์ด</button>
+                <button 
+                class="tab-btn" onclick="switchTab('tab-dashboard')"><i class="fas fa-chart-pie"></i> แดชบอร์ด</button>
             </div>
 
             <div id="tab-users" class="tab-pane active">
-                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
-                    <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;">+ ลงทะเบียนใบหน้าใหม่</h4>
-                    <div style="display: flex; gap: 10px;">
+                <div style="background: rgba(0,0,0,0.2);
+                    padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <h4 style="margin: 0 0 10px 0;
+                        color: #fff; font-size: 0.9rem;">+ ลงทะเบียนใบหน้าใหม่</h4>
+                    <div style="display: flex;
+                        gap: 10px;">
                         <input id="regName" placeholder="ชื่อ-สกุล">
                         <input id="regId" placeholder="รหัสนักเรียน" type="number" style="width: 120px;">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <div style="display: flex;
+                        gap: 10px; margin-top: 5px;">
                         <input id="regClass" placeholder="ห้อง (เช่น 1/1)">
                         <button class="btn-primary" onclick="registerFace()"><i class="fas fa-camera"></i> สแกนบันทึก</button>
                     </div>
                 </div>
 
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; justify-content: space-between;">
+    
+                <h4 style="margin: 0 0 10px 0; color: #fff;
+                    font-size: 0.9rem; display: flex; justify-content: space-between;">
                     <span><i class="fas fa-database"></i> ฐานข้อมูลนักเรียน</span>
-                    <button class="btn-del" onclick="clearRegisteredFaces()" style="font-size:0.7rem; padding: 3px 8px;"><i class="fas fa-users-slash"></i> ล้างทั้งหมด</button>
+                    <button class="btn-del" onclick="clearRegisteredFaces()" style="font-size:0.7rem;
+                        padding: 3px 8px;"><i class="fas fa-users-slash"></i> ล้างทั้งหมด</button>
                 </h4>
                 <input type="text" id="searchUser" placeholder="🔍 ค้นหา ชื่อ, รหัส หรือ ห้อง..." onkeyup="refreshRegisteredList()" style="margin-bottom: 10px;">
                 <div class="scroll-list">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;"><tr><th>ข้อมูล</th><th style="text-align:center;">จัดการ</th></tr></thead>
+               
+                        <thead style="position: sticky; top: 0; background: #131c2e;
+                            z-index: 1;"><tr><th>ข้อมูล</th><th style="text-align:center;">จัดการ</th></tr></thead>
                         <tbody id="registeredList"></tbody>
                     </table>
                 </div>
             </div>
 
             <div id="tab-attendance" class="tab-pane">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+           
+                <div style="display: flex; justify-content: space-between; align-items: center;
+                    margin-bottom: 15px;">
                     <input type="date" id="filterDate" onchange="refreshAttendanceTable()" style="width: 60%;">
-                    <div style="display:flex; gap: 5px;">
+                    <div style="display:flex;
+                        gap: 5px;">
                         <button class="btn-primary" style="padding: 10px;" onclick="exportExcel()"><i class="fas fa-file-excel"></i></button>
                         <button class="btn-del" style="padding: 10px;" onclick="clearAttendanceHistory()"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
+   
                 <div class="scroll-list">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;"><tr><th>ชื่อ/เวลา</th><th>สถานะ</th><th>ลบ</th></tr></thead>
+                        <thead style="position: sticky;
+                            top: 0; background: #131c2e; z-index: 1;"><tr><th>ชื่อ/เวลา</th><th>สถานะ</th><th>ลบ</th></tr></thead>
                         <tbody id="attendanceList"></tbody>
                     </table>
                 </div>
             </div>
 
             <div id="tab-dashboard" class="tab-pane">
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-chart-bar"></i> สรุปรายวัน (ตามห้อง)</h4>
+        
+                <h4 style="margin: 0 0 10px 0; color: #fff;
+                    font-size: 0.9rem;"><i class="fas fa-chart-bar"></i> สรุปรายวัน (ตามห้อง)</h4>
                 <input type="date" id="dashDay" onchange="refreshDashboard()" style="margin-bottom: 10px;">
                 <div id="classDashContainer" class="dash-grid"></div>
 
-                <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                <hr style="border-color: rgba(255,255,255,0.1);
+                    margin: 20px 0;">
 
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-calendar-times"></i> สรุปรายเดือน (จำนวนครั้งที่มาสาย)</h4>
+                <h4 style="margin: 0 0 10px 0;
+                    color: #fff; font-size: 0.9rem;"><i class="fas fa-calendar-times"></i> สรุปรายเดือน (จำนวนครั้งที่มาสาย)</h4>
                 <input type="month" id="dashMonth" onchange="refreshDashboard()" style="margin-bottom: 10px;">
                 <div class="scroll-list" style="max-height: 200px;">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e;"><tr><th>ชื่อ-สกุล (ห้อง)</th><th style="text-align:center; color:var(--danger)">สาย (ครั้ง)</th></tr></thead>
+                        <thead style="position: sticky;
+                            top: 0; background: #131c2e;"><tr><th>ชื่อ-สกุล (ห้อง)</th><th style="text-align:center; color:var(--danger)">สาย (ครั้ง)</th></tr></thead>
                         <tbody id="monthlyLateList"></tbody>
                     </table>
                 </div>
@@ -299,7 +385,8 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { 
+    getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = { apiKey: "AIzaSyDpkhVNLIEyS423GVVakpQ3uy-BKubVfQo", authDomain: "deepface-74fbf.firebaseapp.com", projectId: "deepface-74fbf", storageBucket: "deepface-74fbf.firebasestorage.app", messagingSenderId: "972480534547", appId: "1:972480534547:web:76e3001f550be7ef8e07e6"};
 const app = initializeApp(firebaseConfig);
@@ -314,7 +401,6 @@ let faceMatcher = null;
 let attendanceData = [];
 let registeredFaces = [];
 let isScanning = false;
-
 const video = document.getElementById('video');
 const canvas = document.getElementById('overlay');
 
@@ -330,7 +416,6 @@ function updateLiveClock() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
     const dateStr = now.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    
     document.getElementById('liveTime').innerText = timeStr;
     document.getElementById('liveDate').innerText = dateStr;
 }
@@ -368,6 +453,7 @@ function listenAttendanceFromFirebase() {
             cloudAttendance.push(data);
         });
         cloudAttendance.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+ 
         attendanceData = cloudAttendance; 
         refreshAttendanceTable();
         refreshPublicAttendanceTable();
@@ -387,7 +473,8 @@ async function init() {
         listenAttendanceFromFirebase();
         updateStatus("SYSTEM READY", "status-ready");
         startVideo();
-    } catch (err) { updateStatus("AI ERROR", "status-wait"); }
+    } catch (err) { updateStatus("AI ERROR", "status-wait");
+    }
 }
 
 async function startVideo() {
@@ -400,7 +487,8 @@ async function startVideo() {
             faceapi.matchDimensions(canvas, displaySize);
             setInterval(runScanner, 200);
         };
-    } catch (e) { alert("Camera Denied"); }
+    } catch (e) { alert("Camera Denied");
+    }
 }
 
 async function runScanner() {
@@ -419,8 +507,10 @@ async function runScanner() {
                 new faceapi.draw.DrawBox(det.detection.box, { label: result.label.split('|')[0], boxColor: '#6366f1' }).draw(canvas);
                 processAttendance(result.label);
             }
-        });
-    } catch (e) {} finally { isScanning = false; }
+       
+         });
+    } catch (e) {} finally { isScanning = false;
+    }
 }
 
 window.processAttendance = async function(label) {
@@ -430,7 +520,6 @@ window.processAttendance = async function(label) {
     const dateStr = now.toLocaleDateString('th-TH');
     const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
     const lastLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
-    
     if (lastLog) {
         const [lH, lM, lS] = lastLog.time.split(':');
         const lTime = new Date(); lTime.setHours(lH, lM, lS);
@@ -439,13 +528,13 @@ window.processAttendance = async function(label) {
 
     const status = timeStr > LATE_TIME ? "LATE" : "ON TIME";
     const entry = { name, id, room, dateValue: dateValue, date: dateStr, time: timeStr, status: status, timestamp: now.toISOString() };
-    
     try {
         await addDoc(collection(db, "attendance"), entry);
         document.getElementById('displayName').innerText = name;
         document.getElementById('displayTime').innerHTML = `<i class="fas fa-circle-check" style="color:var(--success)"></i> CHECKED IN AT ${timeStr}`;
         playNotification(name, status);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e);
+    }
 }
 
 window.playNotification = function(studentName, status) {
@@ -465,24 +554,52 @@ window.refreshPublicAttendanceTable = function() {
     const tbody = document.getElementById('publicAttendanceList');
     if(!tbody) return;
     
-    const logs = attendanceData.filter(a => a.dateValue === localDateISO || (!a.dateValue && a.timestamp && a.timestamp.startsWith(localDateISO)));
-    document.querySelector('#logCount span').innerText = logs.length;
+    // นับจำนวนคนเข้าเรียนเฉพาะของวันนี้เพื่อแสดงบน HUD
+    const todayLogs = attendanceData.filter(a => a.dateValue === localDateISO || (!a.dateValue && a.timestamp && a.timestamp.startsWith(localDateISO)));
+    const logSpan = document.querySelector('#logCount span');
+    if(logSpan) logSpan.innerText = todayLogs.length;
 
-    if (logs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">ยังไม่มีคนมาเรียนในวันนี้</td></tr>`;
+    // ถ้าไม่มีข้อมูลเลยในฐานข้อมูล
+    if (attendanceData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">ยังไม่มีประวัติการเข้าเรียน</td></tr>`;
         return;
     }
 
-    tbody.innerHTML = logs.map(a => {
-        const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
-        return `
+    // จัดกลุ่มข้อมูลทั้งหมดตามวันที่ (Group by Date)
+    const groupedData = new Map();
+    attendanceData.forEach(a => {
+        const dateKey = a.date || a.dateValue || 'ไม่ระบุวันที่';
+        if (!groupedData.has(dateKey)) {
+            groupedData.set(dateKey, []);
+        }
+        groupedData.get(dateKey).push(a);
+    });
+
+    let html = '';
+    
+    // วนลูปสร้างตารางโดยแยกหัวข้อตามแต่ละวัน
+    for (const [date, logs] of groupedData.entries()) {
+        html += `
             <tr>
-                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${a.room || '-'}</small></td>
-                <td><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
-                <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+                <td colspan="3" style="background: rgba(99, 102, 241, 0.15); color: var(--primary-bright); text-align: center; font-weight: 600; padding: 10px; border-radius: 8px;">
+                    <i class="far fa-calendar-alt"></i> ประจำวันที่ ${date}
+                </td>
             </tr>
         `;
-    }).join('');
+        
+        html += logs.map(a => {
+            const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
+            return `
+                <tr>
+                    <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${a.room || '-'}</small></td>
+                    <td><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
+                    <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    tbody.innerHTML = html;
 }
 
 window.refreshRegisteredList = function() {
@@ -497,12 +614,14 @@ window.refreshRegisteredList = function() {
         return `
             <tr>
                 <td><strong style="color:#fff">${name}</strong><br><small style="color:var(--text-muted)">ID: ${id} | ห้อง ${room}</small></td>
+          
                 <td style="text-align: center; white-space: nowrap;">
                     <button class="btn-del" onclick="editFaceName(${originalIndex})" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 6px;"><i class="fas fa-edit"></i></button>
                     <button class="btn-del" onclick="deleteFace(${originalIndex})" style="padding: 6px;"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
-        `;
+   
+         `;
     }).join('');
 }
 
@@ -521,7 +640,8 @@ window.editFaceName = async function(index) {
 window.deleteFace = async function(index) {
     const faceToDelete = registeredFaces[index];
     if (confirm(`ยืนยันการลบ ${faceToDelete.label.split('|')[0]} ?`) && faceToDelete.docId) {
-        try { await deleteDoc(doc(db, "faces", faceToDelete.docId)); } catch (error) { alert("เกิดข้อผิดพลาด"); }
+        try { await deleteDoc(doc(db, "faces", faceToDelete.docId));
+        } catch (error) { alert("เกิดข้อผิดพลาด"); }
     }
 }
 
@@ -533,13 +653,13 @@ window.registerFace = async function() {
 
     updateStatus("CAPTURING FACE...", "status-wait");
     const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224 })).withFaceLandmarks().withFaceDescriptor();
-    
     if (det) {
         try {
             await addDoc(collection(db, "faces"), { label: `${name}|${id}|${room}`, descriptor: Array.from(det.descriptor) });
             alert("ลงทะเบียนสำเร็จ!");
             document.getElementById('regName').value = ""; document.getElementById('regId').value = ""; document.getElementById('regClass').value = "";
-        } catch (e) { alert("เกิดข้อผิดพลาดในการบันทึก"); }
+        } catch (e) { alert("เกิดข้อผิดพลาดในการบันทึก");
+        }
     } else { alert("ไม่พบใบหน้า กรุณาลองใหม่"); }
     updateStatus("SYSTEM READY", "status-ready");
 }
@@ -547,15 +667,14 @@ window.registerFace = async function() {
 window.refreshAttendanceTable = function() {
     const tbody = document.getElementById('attendanceList');
     const selectedDate = document.getElementById('filterDate').value;
-    
     const logs = attendanceData.filter(a => a.dateValue === selectedDate || (!a.dateValue && a.timestamp && a.timestamp.startsWith(selectedDate)));
-    
     tbody.innerHTML = logs.map((a, i) => {
         const statusStyle = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
         return `
             <tr>
                 <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
                 <td><span class="status-pill" style="${statusStyle}">${a.status}</span></td>
+                
                 <td style="text-align:center;">
                     <button class="btn-del" onclick="deleteSingleAttendance('${a.docId}')" style="padding: 4px 8px; font-size: 0.7rem;"><i class="fas fa-times"></i></button>
                 </td>
@@ -567,7 +686,8 @@ window.refreshAttendanceTable = function() {
 window.deleteSingleAttendance = async function(docId) {
     if(!docId) return alert("ข้อมูลเก่าเกินไป ไม่สามารถลบรายตัวได้ กรุณาใช้ปุ่มล้างทั้งหมด");
     if(confirm("ต้องการลบประวัตินี้ใช่หรือไม่?")) {
-        try { await deleteDoc(doc(db, "attendance", docId)); } catch(e) { alert("ลบไม่สำเร็จ"); }
+        try { await deleteDoc(doc(db, "attendance", docId)); } catch(e) { alert("ลบไม่สำเร็จ");
+        }
     }
 }
 
@@ -607,7 +727,6 @@ window.refreshDashboard = function() {
         if(log.status === 'LATE') classStats[room].late++;
         else classStats[room].ontime++;
     });
-    
     const dashContainer = document.getElementById('classDashContainer');
     if(Object.keys(classStats).length === 0) {
         dashContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">ไม่มีข้อมูลการเข้าเรียนในวันนี้</div>`;
@@ -617,6 +736,7 @@ window.refreshDashboard = function() {
                 <h4>ห้อง ${room}</h4>
                 <div style="font-size: 0.75rem; color: var(--success); margin-top:5px;">มาทัน: ${stat.ontime}</div>
                 <div style="font-size: 0.75rem; color: var(--danger);">มาสาย: ${stat.late}</div>
+            
                 <hr style="border-color: rgba(255,255,255,0.05); margin: 5px 0;">
                 <span style="font-size: 1.1rem;">รวม ${stat.total}</span>
             </div>
@@ -625,12 +745,10 @@ window.refreshDashboard = function() {
 
     const monthLogs = attendanceData.filter(a => a.dateValue && a.dateValue.startsWith(dashMonth));
     const studentLateStats = {};
-    
     monthLogs.forEach(log => {
         if(!studentLateStats[log.id]) studentLateStats[log.id] = { name: log.name, room: log.room, lateCount: 0 };
         if(log.status === 'LATE') studentLateStats[log.id].lateCount++;
     });
-    
     const lateListHTML = Object.values(studentLateStats)
         .filter(s => s.lateCount > 0)
         .sort((a, b) => b.lateCount - a.lateCount)
@@ -638,10 +756,12 @@ window.refreshDashboard = function() {
             <tr>
                 <td><strong style="color:#fff">${s.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${s.room || '-'}</small></td>
                 <td style="text-align:center; color:var(--danger); font-size:1.2rem; font-weight:700;">${s.lateCount}</td>
+         
             </tr>
         `).join('');
         
-    document.getElementById('monthlyLateList').innerHTML = lateListHTML || `<tr><td colspan="2" style="text-align:center; color:var(--success);">เดือนนี้ไม่มีนักเรียนมาสายเลย 🎉</td></tr>`;
+    document.getElementById('monthlyLateList').innerHTML = lateListHTML ||
+`<tr><td colspan="2" style="text-align:center; color:var(--success);">เดือนนี้ไม่มีนักเรียนมาสายเลย 🎉</td></tr>`;
 }
 
 
@@ -661,7 +781,8 @@ window.logout = function() {
 }
 
 window.updateFaceMatcher = function() {
-    if (registeredFaces.length === 0) { faceMatcher = null; return; }
+    if (registeredFaces.length === 0) { faceMatcher = null;
+        return; }
     const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
     faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
 }
@@ -672,7 +793,6 @@ window.exportExcel = function() {
     
     if (logs.length === 0) return alert("ไม่มีข้อมูลสำหรับวันที่เลือก");
     const formattedData = logs.map(r => ({ "ชื่อ": r.name, "รหัสนักเรียน": r.id, "ห้องเรียน": r.room, "วันที่": r.date, "เวลา": r.time, "สถานะ": r.status }));
-    
     const ws = XLSX.utils.json_to_sheet(formattedData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
