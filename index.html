@@ -104,64 +104,85 @@
             border: 1px solid var(--glass-border); gap: 15px;
         }
 
-        /* ── Manual Check-in Box (hidden → slides in when scan fails) ── */
+        /* ── Manual Check-in Box — always visible ── */
         .manual-checkin-box {
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            margin-top: 0;
-            padding: 0 20px;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 18px;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity     0.4s ease,
-                        margin-top  0.4s ease,
-                        padding     0.4s ease,
-                        border-color 0.4s ease,
-                        background  0.4s ease;
-        }
-        .manual-checkin-box.show {
-            max-height: 200px;
-            opacity: 1;
             margin-top: 20px;
-            padding: 18px 20px;
-            background: rgba(244, 63, 94, 0.07);
-            border-color: rgba(244, 63, 94, 0.3);
+            padding: 20px 22px 16px;
+            background: rgba(99, 102, 241, 0.07);
+            border: 1.5px solid rgba(99, 102, 241, 0.35);
+            border-radius: 18px;
         }
+
         .manual-checkin-box .box-label {
             display: flex; align-items: center; gap: 8px;
-            font-size: 0.8rem; font-weight: 600;
-            margin-bottom: 12px;
+            font-size: 0.82rem; font-weight: 700;
+            margin-bottom: 14px; color: #c7d2fe;
+            letter-spacing: 0.3px;
         }
-        /* Video border turns red when scan fails */
-        .video-container.scan-fail {
-            border-color: rgba(244, 63, 94, 0.55) !important;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8),
-                        0 0 28px rgba(244, 63, 94, 0.22) !important;
+        .manual-checkin-box .box-label i { color: var(--primary-bright); font-size: 0.95rem; }
+
+        /* ── large prominent input ── */
+        .manual-id-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
-        .manual-checkin-row { display: flex; gap: 10px; }
-        .manual-checkin-row input {
-            flex: 1; margin: 0; padding: 12px 16px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-            color: white; font-family: inherit; font-size: 0.95rem;
-            /* hide number spin arrows */
+        .manual-id-wrapper .id-icon {
+            position: absolute;
+            left: 16px;
+            color: var(--primary-bright);
+            font-size: 1.05rem;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .manual-id-input {
+            flex: 1;
+            margin: 0 !important;
+            padding: 15px 16px 15px 46px !important;
+            background: rgba(10, 15, 30, 0.6) !important;
+            border: 2px solid rgba(99, 102, 241, 0.4) !important;
+            border-radius: 14px !important;
+            color: white !important;
+            font-family: inherit !important;
+            font-size: 1.05rem !important;
+            font-weight: 500 !important;
+            letter-spacing: 0.5px;
+            /* remove spin arrows */
             -moz-appearance: textfield;
         }
-        .manual-checkin-row input::-webkit-outer-spin-button,
-        .manual-checkin-row input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .manual-checkin-row input:focus { outline: none; border-color: var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow); }
-        .btn-manual {
-            white-space: nowrap; width: auto; padding: 12px 20px; border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
-            color: white; font-weight: 600; border: none; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
+        .manual-id-input::-webkit-outer-spin-button,
+        .manual-id-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .manual-id-input:focus {
+            outline: none !important;
+            border-color: var(--primary-bright) !important;
+            box-shadow: 0 0 0 3px var(--primary-glow), 0 0 20px rgba(99,102,241,0.2) !important;
         }
-        .btn-manual:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .manual-id-input::placeholder { color: rgba(148, 163, 184, 0.6); font-weight: 400; }
+
+        .manual-checkin-row { display: flex; gap: 10px; align-items: stretch; margin-top: 12px; }
+
+        .btn-manual {
+            white-space: nowrap; width: auto;
+            padding: 0 22px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+            color: white; font-weight: 700; border: none; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.95rem; min-height: 52px;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+        }
+        .btn-manual:hover { filter: brightness(1.12); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+        .btn-manual:active { transform: translateY(0px); }
+
         #manualCheckInMsg {
-            min-height: 22px; margin-top: 10px; font-size: 0.82rem;
+            min-height: 20px; margin-top: 10px; font-size: 0.83rem;
             padding: 0 4px; transition: opacity 0.3s ease;
+        }
+
+        /* hint text below input */
+        .manual-hint {
+            font-size: 0.75rem; color: var(--text-muted);
+            margin-top: 8px; padding: 0 4px;
+            display: flex; align-items: center; gap: 5px;
         }
 
         .scroll-list { 
@@ -211,7 +232,7 @@
             .container { padding: 10px; }
             .recognized-block { flex-direction: column; text-align: center; }
             .manual-checkin-row { flex-direction: column; }
-            .btn-manual { width: 100%; justify-content: center; }
+            .btn-manual { width: 100%; justify-content: center; min-height: 48px; }
         }
     </style>
 </head>
@@ -254,26 +275,37 @@
                 </div>
             </div>
 
-            <!-- ── กรอกรหัสนักเรียน (ปรากฏเมื่อสแกนหน้าไม่ผ่าน) ── -->
+            <!-- ── ช่องกรอกรหัสนักเรียน — แสดงตลอดเวลา ── -->
             <div class="manual-checkin-box" id="manualCheckinSection">
                 <div class="box-label">
-                    <i class="fas fa-triangle-exclamation" style="color:var(--danger);"></i>
-                    <span style="color:#fda4af; font-weight:700;">ตรวจจับใบหน้าไม่ผ่าน</span>
-                    <span style="color:var(--text-muted);">— กรอกรหัสนักเรียนเพื่อเช็คชื่อ</span>
-                    <button onclick="hideManualSection()" title="ปิด"
-                            style="margin-left:auto; background:none; width:auto; padding:2px 8px;
-                                   color:var(--text-muted); font-size:1rem; border:none; cursor:pointer; line-height:1;">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <i class="fas fa-id-card"></i>
+                    <span>เช็คชื่อด้วยรหัสประจำตัวนักเรียน</span>
+                    <span style="color: rgba(148,163,184,0.5); font-weight: 400; margin-left: 4px;">/ สแกนหน้าไม่ผ่านก็ใช้ได้</span>
                 </div>
+
                 <div class="manual-checkin-row">
-                    <input type="number" id="manualIdInput" placeholder="พิมพ์รหัสประจำตัวนักเรียน แล้วกด Enter">
+                    <div class="manual-id-wrapper" style="flex:1;">
+                        <i class="fas fa-hashtag id-icon"></i>
+                        <input
+                            class="manual-id-input"
+                            type="number"
+                            id="manualIdInput"
+                            placeholder="พิมพ์รหัสนักเรียน แล้วกด Enter หรือกดปุ่ม →"
+                            autocomplete="off"
+                        >
+                    </div>
                     <button class="btn-manual" onclick="manualCheckIn()">
                         <i class="fas fa-sign-in-alt"></i> เช็คชื่อ
                     </button>
                 </div>
+
+                <div class="manual-hint">
+                    <i class="fas fa-circle-info" style="color:var(--primary-bright);"></i>
+                    กรอกรหัสนักเรียน แล้วกด Enter หรือกดปุ่ม "เช็คชื่อ"
+                </div>
                 <div id="manualCheckInMsg"></div>
             </div>
+
         </div>    
     </div>
 
@@ -404,10 +436,6 @@ const LATE_TIME  = "08:00";
 const FEEDBACK_COOLDOWN  = 5000; // ms
 const lastFeedbackMap    = {};   // { studentId: Date }
 
-// ── แสดงช่องกรอกรหัสหลังจากสแกนหน้าไม่ผ่านนาน X วินาที ──
-const SHOW_MANUAL_AFTER  = 4000; // 4 วินาที
-let   unknownFaceTimer   = 0;    // timestamp ที่เริ่มเจอ unknown face
-
 let faceMatcher    = null;
 let attendanceData = [];
 let registeredFaces = [];
@@ -503,83 +531,37 @@ async function runScanner() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const resized = faceapi.resizeResults(detections, displaySize);
 
-        // ── ไม่มีใบหน้าในกล้อง → reset timer (อย่าซ่อน manual เผื่อกำลังพิมพ์) ──
-        if (resized.length === 0) {
-            unknownFaceTimer = 0;
-            return;
-        }
+        if (resized.length === 0 || !faceMatcher) return;
 
-        // ── มีใบหน้าแต่ยังไม่มี faceMatcher (ยังไม่มีข้อมูลนักเรียน) ──
-        if (!faceMatcher) {
-            if (!unknownFaceTimer) unknownFaceTimer = Date.now();
-            else if (Date.now() - unknownFaceTimer > SHOW_MANUAL_AFTER) showManualSection();
-            return;
-        }
-
-        // ── ตรวจจับและจับคู่ใบหน้า ──
-        let anyRecognized = false;
         resized.forEach(det => {
             const result = faceMatcher.findBestMatch(det.descriptor);
             if (result.label !== 'unknown' && result.distance < 0.45) {
-                anyRecognized = true;
                 new faceapi.draw.DrawBox(det.detection.box, {
                     label: result.label.split('|')[0], boxColor: '#6366f1'
                 }).draw(canvas);
                 processAttendance(result.label, 'face');
             } else {
-                // วาดกรอบแดงเมื่อจำไม่ได้
                 new faceapi.draw.DrawBox(det.detection.box, {
                     label: 'ไม่พบในระบบ', boxColor: '#f43f5e'
                 }).draw(canvas);
             }
         });
 
-        if (anyRecognized) {
-            // จำได้แล้ว → ซ่อน manual, reset timer
-            unknownFaceTimer = Date.now();
-            hideManualSection();
-        } else {
-            // จำไม่ได้ → นับเวลา แล้วแสดง manual หลัง 4 วิ
-            if (!unknownFaceTimer) unknownFaceTimer = Date.now();
-            else if (Date.now() - unknownFaceTimer > SHOW_MANUAL_AFTER) showManualSection();
-        }
-
     } catch (e) {} finally { isScanning = false; }
 }
 
-// ─── Show / Hide manual section ──────────────────────────────
-function showManualSection() {
-    const section = document.getElementById('manualCheckinSection');
-    if (section.classList.contains('show')) return; // already visible
-    section.classList.add('show');
-    document.getElementById('videoContainer').classList.add('scan-fail');
-    // focus input หลัง animation เริ่ม
-    setTimeout(() => document.getElementById('manualIdInput').focus(), 300);
-}
-
-window.hideManualSection = function() {
-    document.getElementById('manualCheckinSection').classList.remove('show');
-    document.getElementById('videoContainer').classList.remove('scan-fail');
-    document.getElementById('manualIdInput').value = '';
-    document.getElementById('manualCheckInMsg').innerHTML = '';
-    unknownFaceTimer = Date.now(); // cooldown ก่อน trigger อีกครั้ง
-};
-
 // ─── Core check-in logic ─────────────────────────────────────
-// method: 'face' | 'manual'
 window.processAttendance = async function(label, method = 'face') {
     const [name, id, room] = label.split('|');
     const now        = new Date();
     const dateValue  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
-    // ── กัน UI flicker สำหรับการสแกนหน้า (ไม่ใช้กับ manual) ──
     if (method === 'face') {
         const lastFB = lastFeedbackMap[id] || 0;
         if (now - lastFB < FEEDBACK_COOLDOWN) return;
         lastFeedbackMap[id] = now;
     }
 
-    // ── เช็คว่าเช็คชื่อไปแล้วในวันนี้หรือยัง (1 ครั้ง/วัน) ──
     const existingLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
     if (existingLog) {
         document.getElementById('displayName').innerText  = name;
@@ -589,7 +571,6 @@ window.processAttendance = async function(label, method = 'face') {
         return { alreadyCheckedIn: true, time: existingLog.time };
     }
 
-    // ── บันทึกเข้า Firestore ──
     const dateStr = now.toLocaleDateString('th-TH');
     const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
     const status  = timeStr > LATE_TIME ? "LATE" : "ON TIME";
@@ -631,7 +612,6 @@ window.manualCheckIn = async function() {
     const now = new Date();
     const dateValue = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
-    // ตรวจสอบว่าเช็คชื่อแล้วหรือยัง
     const existingLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
     if (existingLog) {
         showMsg(msgEl, 'warning', `${name} เช็คชื่อแล้ว วันนี้เวลา ${existingLog.time}`);
@@ -646,7 +626,7 @@ window.manualCheckIn = async function() {
         const statusTH = result.status === 'LATE' ? '⚠️ มาสาย' : '✅ มาทันเวลา';
         showMsg(msgEl, 'success', `${name} เช็คชื่อสำเร็จ — ${statusTH} (${result.timeStr})`);
         inputEl.value = '';
-        window.hideManualSection();
+        inputEl.focus();
         setTimeout(() => { msgEl.innerHTML = ''; }, 5000);
     } else if (result && result.alreadyCheckedIn) {
         showMsg(msgEl, 'warning', `${name} เช็คชื่อแล้ว วันนี้เวลา ${result.time}`);
