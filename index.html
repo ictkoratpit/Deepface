@@ -24,7 +24,9 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
+
         * { box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+
         body {
             font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #090d16 100%);
@@ -33,11 +35,13 @@
             margin: 0; color: var(--text-main);
             min-height: 100vh; overflow-x: hidden;
         }
-        @keyframes gradientBg { 
-            0%   { background-position: 0% 50%; } 
-            50%  { background-position: 100% 50%; } 
-            100% { background-position: 0% 50%; } 
+
+        @keyframes gradientBg {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
         header {
             background: rgba(9, 13, 22, 0.7);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -46,7 +50,7 @@
             display: flex; align-items: center; justify-content: space-between; gap: 20px;
         }
         .header-left { display: flex; align-items: center; gap: 20px; }
-        header h1 { 
+        header h1 {
             margin: 0; font-size: 1.4rem; font-weight: 600;
             background: linear-gradient(to right, #ffffff, #c7d2fe);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -59,95 +63,94 @@
         }
         .live-clock .time { font-size: 1.2rem; font-weight: 700; color: var(--primary-bright); letter-spacing: 0.5px; }
         .live-clock .date { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
         .container { display: grid; grid-template-columns: 1fr 500px; gap: 30px; padding: 30px; max-width: 1650px; margin: auto; }
-        .card { 
+
+        .card {
             background: var(--glass-card); backdrop-filter: blur(16px); border-radius: 20px;
             padding: 24px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--glass-border); margin-bottom: 25px;
             position: relative; overflow: hidden;
         }
-        .card::before { 
+        .card::before {
             content: ''; position: absolute; top: 0; left: 0;
             width: 100%; height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5;
         }
-        .video-container { 
+
+        .video-container {
             position: relative; width: 100%; background: #000; border-radius: 20px;
             overflow: hidden; aspect-ratio: 4/3;
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(99, 102, 241, 0.15);
             border: 1px solid rgba(99, 102, 241, 0.3);
-            display: flex; justify-content: center; align-items: center; 
+            display: flex; justify-content: center; align-items: center;
         }
-        .hud-overlay { 
+        .hud-overlay {
             position: absolute; inset: 0; z-index: 10; pointer-events: none;
             background-image: linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; 
+            background-size: 40px 40px;
         }
-        video { width: 100%; height: 100%; object-fit: cover; } 
+        video { width: 100%; height: 100%; object-fit: cover; }
         canvas { position: absolute; top: 0; left: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; }
-        .status-badge { 
+
+        .status-badge {
             padding: 8px 18px; border-radius: 30px; font-weight: 600;
             display: inline-flex; align-items: center; gap: 8px;
             margin-bottom: 20px; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .status-ready { background: var(--success-glow); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
         .status-wait  { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-        #displayName { 
+
+        #displayName {
             font-size: 2.2rem; font-weight: 700;
             background: linear-gradient(to right, #ffffff, var(--primary-bright), #f43f5e);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 8px 0;
         }
-        .recognized-block { 
+        .recognized-block {
             margin-top: 25px; display: flex; justify-content: space-between; align-items: center;
             background: rgba(0,0,0,0.15); padding: 20px; border-radius: 18px;
             border: 1px solid var(--glass-border); gap: 15px;
         }
 
-        /* ── Manual Check-in Box — always visible ── */
-        .manual-checkin-box {
-            margin-top: 20px;
-            padding: 20px 22px 16px;
-            background: rgba(99, 102, 241, 0.07);
-            border: 1.5px solid rgba(99, 102, 241, 0.35);
-            border-radius: 18px;
+        /* ═══════════════════════════════════════════════
+           Manual Check-in Card (right panel)
+        ═══════════════════════════════════════════════ */
+        .checkin-card {
+            background: linear-gradient(145deg, rgba(15,23,42,0.75) 0%, rgba(26,20,60,0.7) 100%);
+            border-color: rgba(99,102,241,0.22);
         }
+        .checkin-card::before {
+            background: linear-gradient(90deg, transparent, var(--primary-bright), #a5b4fc, var(--primary), transparent);
+            opacity: 0.7;
+        }
+        .checkin-header {
+            display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+        }
+        .checkin-icon-box {
+            width: 46px; height: 46px; border-radius: 14px; flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(79,70,229,0.35));
+            border: 1.5px solid rgba(99,102,241,0.45);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary-bright); font-size: 1.15rem;
+            box-shadow: 0 4px 14px rgba(99,102,241,0.2);
+        }
+        .checkin-title { color: white; font-weight: 700; font-size: 1rem; line-height: 1.3; }
+        .checkin-sub   { color: var(--text-muted); font-size: 0.76rem; margin-top: 3px; }
 
-        .manual-checkin-box .box-label {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.82rem; font-weight: 700;
-            margin-bottom: 14px; color: #c7d2fe;
-            letter-spacing: 0.3px;
-        }
-        .manual-checkin-box .box-label i { color: var(--primary-bright); font-size: 0.95rem; }
-
-        /* ── large prominent input ── */
-        .manual-id-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .manual-id-wrapper { position: relative; display: flex; align-items: center; }
         .manual-id-wrapper .id-icon {
-            position: absolute;
-            left: 16px;
-            color: var(--primary-bright);
-            font-size: 1.05rem;
-            pointer-events: none;
-            z-index: 1;
+            position: absolute; left: 16px; color: var(--primary-bright);
+            font-size: 1.05rem; pointer-events: none; z-index: 1;
         }
         .manual-id-input {
-            flex: 1;
-            margin: 0 !important;
+            flex: 1; margin: 0 !important;
             padding: 15px 16px 15px 46px !important;
-            background: rgba(10, 15, 30, 0.6) !important;
-            border: 2px solid rgba(99, 102, 241, 0.4) !important;
-            border-radius: 14px !important;
-            color: white !important;
-            font-family: inherit !important;
-            font-size: 1.05rem !important;
-            font-weight: 500 !important;
-            letter-spacing: 0.5px;
-            /* remove spin arrows */
+            background: rgba(6, 10, 22, 0.55) !important;
+            border: 2px solid rgba(99, 102, 241, 0.35) !important;
+            border-radius: 14px !important; color: white !important;
+            font-family: inherit !important; font-size: 1.05rem !important;
+            font-weight: 500 !important; letter-spacing: 0.5px;
             -moz-appearance: textfield;
         }
         .manual-id-input::-webkit-outer-spin-button,
@@ -157,61 +160,243 @@
             border-color: var(--primary-bright) !important;
             box-shadow: 0 0 0 3px var(--primary-glow), 0 0 20px rgba(99,102,241,0.2) !important;
         }
-        .manual-id-input::placeholder { color: rgba(148, 163, 184, 0.6); font-weight: 400; }
+        .manual-id-input::placeholder { color: rgba(148, 163, 184, 0.5); font-weight: 400; }
 
-        .manual-checkin-row { display: flex; gap: 10px; align-items: stretch; margin-top: 12px; }
-
-        .btn-manual {
-            white-space: nowrap; width: auto;
-            padding: 0 22px; border-radius: 14px;
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
-            color: white; font-weight: 700; border: none; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.95rem; min-height: 52px;
-            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+        .btn-checkin {
+            width: 100%; margin-top: 12px;
+            padding: 14px 20px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+            color: white; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            font-size: 1rem; font-family: inherit;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+            letter-spacing: 0.2px;
         }
-        .btn-manual:hover { filter: brightness(1.12); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
-        .btn-manual:active { transform: translateY(0px); }
+        .btn-checkin:hover { filter: brightness(1.12); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,102,241,0.5); }
+        .btn-checkin:active { transform: translateY(0); }
 
-        #manualCheckInMsg {
-            min-height: 20px; margin-top: 10px; font-size: 0.83rem;
-            padding: 0 4px; transition: opacity 0.3s ease;
-        }
-
-        /* hint text below input */
         .manual-hint {
-            font-size: 0.75rem; color: var(--text-muted);
-            margin-top: 8px; padding: 0 4px;
+            font-size: 0.74rem; color: var(--text-muted);
+            margin-top: 10px; padding: 0 2px;
             display: flex; align-items: center; gap: 5px;
         }
+        #manualCheckInMsg {
+            min-height: 22px; margin-top: 10px; font-size: 0.83rem;
+            padding: 0 2px; transition: opacity 0.3s ease;
+        }
 
-        .scroll-list { 
+        /* ═══════════════════════════════════════════════
+           Floating Admin Button
+        ═══════════════════════════════════════════════ */
+        .admin-float-btn {
+            position: fixed; bottom: 28px; right: 28px;
+            height: 50px; min-width: 50px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            background-size: 200% 200%;
+            color: #a5b4fc; 
+            border: 1.5px solid rgba(99,102,241,0.5);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 18px; gap: 0;
+            font-size: 1rem; font-weight: 700; font-family: inherit;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 0 0 rgba(99,102,241,0.4);
+            z-index: 998;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: adminIdlePulse 4s ease-in-out infinite;
+            transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                        gap 0.35s ease,
+                        padding 0.35s ease,
+                        box-shadow 0.3s ease,
+                        transform 0.3s ease,
+                        background-position 0.5s ease,
+                        color 0.3s ease,
+                        border-color 0.3s ease;
+            width: 50px;
+        }
+        .admin-float-btn:hover {
+            width: 158px; gap: 10px; padding: 0 22px 0 18px;
+            background-position: right center;
+            color: white; border-color: rgba(129,140,248,0.75);
+            box-shadow: 0 8px 32px rgba(99,102,241,0.55), 0 0 0 4px rgba(99,102,241,0.12);
+            transform: translateY(-3px);
+        }
+        .admin-float-btn:active { transform: translateY(-1px); }
+        .admin-float-btn .fa-shield-halved { font-size: 1.05rem; flex-shrink: 0; }
+        .admin-float-label {
+            font-size: 0.88rem; letter-spacing: 0.3px;
+            opacity: 0; max-width: 0; overflow: hidden;
+            transition: opacity 0.25s ease 0.08s, max-width 0.35s ease;
+        }
+        .admin-float-btn:hover .admin-float-label { opacity: 1; max-width: 100px; }
+
+        @keyframes adminIdlePulse {
+            0%, 100% { box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 0 0 rgba(99,102,241,0); }
+            50%       { box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 0 8px rgba(99,102,241,0); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           Admin Modal
+        ═══════════════════════════════════════════════ */
+        .admin-modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(3, 5, 15, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .admin-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        .admin-modal-card {
+            background: linear-gradient(160deg, rgba(15,23,42,0.97) 0%, rgba(26,20,60,0.97) 100%);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 28px;
+            padding: 46px 42px 38px;
+            width: 90%; max-width: 420px;
+            text-align: center; position: relative;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.7),
+                        0 0 0 1px rgba(255,255,255,0.04),
+                        inset 0 1px 0 rgba(255,255,255,0.06);
+            transform: translateY(40px) scale(0.92);
+            transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .admin-modal-overlay.open .admin-modal-card { transform: translateY(0) scale(1); }
+
+        .admin-modal-card.shake { animation: modalShake 0.45s ease; }
+        @keyframes modalShake {
+            0%,100% { transform: translateX(0); }
+            18%     { transform: translateX(-11px); }
+            36%     { transform: translateX(11px); }
+            54%     { transform: translateX(-7px); }
+            72%     { transform: translateX(7px); }
+            90%     { transform: translateX(-3px); }
+        }
+
+        /* glow ring on card */
+        .admin-modal-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 3px; border-radius: 28px 28px 0 0;
+            background: linear-gradient(90deg, transparent, #818cf8, #6366f1, #818cf8, transparent);
+            opacity: 0.8;
+        }
+
+        .modal-badge {
+            width: 78px; height: 78px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(129,140,248,0.22), rgba(79,70,229,0.12));
+            border: 2px solid rgba(99,102,241,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: var(--primary-bright);
+            margin: 0 auto 22px;
+            box-shadow: 0 0 40px rgba(99,102,241,0.3), inset 0 0 20px rgba(99,102,241,0.1);
+        }
+
+        .modal-title {
+            margin: 0 0 5px; font-size: 1.55rem; font-weight: 700;
+            color: white; letter-spacing: -0.3px;
+        }
+        .modal-subtitle {
+            color: var(--text-muted); font-size: 0.83rem; margin: 0 0 28px;
+        }
+
+        .modal-pass-wrap {
+            position: relative; margin-bottom: 14px;
+        }
+        .modal-pass-wrap .lock-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--primary-bright); font-size: 0.9rem; pointer-events: none;
+        }
+        .modal-pass-input {
+            width: 100%; padding: 14px 16px 14px 46px !important;
+            background: rgba(4, 8, 20, 0.6) !important;
+            border: 1.5px solid rgba(99,102,241,0.38) !important;
+            border-radius: 14px !important; color: white !important;
+            font-family: inherit !important; font-size: 1rem !important;
+            letter-spacing: 2px; margin: 0 !important;
+        }
+        .modal-pass-input:focus {
+            outline: none !important;
+            border-color: var(--primary-bright) !important;
+            box-shadow: 0 0 0 3px var(--primary-glow), 0 0 20px rgba(99,102,241,0.15) !important;
+        }
+        .modal-pass-input::placeholder { letter-spacing: 0; color: rgba(148,163,184,0.5); }
+
+        .modal-login-btn {
+            width: 100%; padding: 14px 20px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+            color: white; font-weight: 700; font-family: inherit; font-size: 1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px;
+            box-shadow: 0 4px 22px rgba(99,102,241,0.38);
+            transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .modal-login-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.55); }
+        .modal-login-btn:active { transform: translateY(0); }
+
+        #modalErrorMsg {
+            min-height: 20px; margin-top: 12px; font-size: 0.82rem;
+            color: var(--danger); transition: opacity 0.3s ease;
+        }
+
+        .modal-close-btn {
+            position: absolute; top: 16px; right: 16px;
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; padding: 0;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .modal-close-btn:hover {
+            background: rgba(244,63,94,0.15);
+            color: var(--danger); border-color: rgba(244,63,94,0.35);
+        }
+
+        /* divider line in modal */
+        .modal-divider {
+            border: none; border-top: 1px solid rgba(255,255,255,0.07);
+            margin: 24px 0 0; width: 100%;
+        }
+        .modal-footer-note {
+            font-size: 0.73rem; color: rgba(148,163,184,0.5);
+            margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+
+        /* ═══════════════════════════════════════════════
+           Existing shared styles
+        ═══════════════════════════════════════════════ */
+        .scroll-list {
             max-height: 350px; overflow-y: auto; overflow-x: auto;
             border-radius: 14px; background: rgba(0,0,0,0.2);
             padding: 6px; border: 1px solid rgba(255,255,255,0.05);
         }
         .scroll-list::-webkit-scrollbar { width: 6px; height: 6px; }
         .scroll-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 350px; }
         tr  { background: rgba(30, 41, 59, 0.4); border-radius: 12px; }
         td, th { padding: 12px 14px; text-align: left; font-size: 0.9rem; }
         th  { font-weight: 500; color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
-        input, select { 
+
+        input, select {
             width: 100%; padding: 12px 16px; margin: 8px 0;
             background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 14px; color: white; font-family: inherit; font-size: 0.95rem;
         }
         input:focus, select:focus { outline: none; border-color: var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow); }
+
         button { width: 100%; padding: 12px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); color: white; }
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .btn-del { color: #fda4af; background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.2); padding: 6px 12px; border-radius: 8px; width: auto; }
         .btn-del:hover { background: var(--danger); color: white; }
+
         .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
         h3 { font-weight: 500; color: #e2e8f0; display: flex; align-items: center; gap: 10px; margin-top: 0; }
         h3 i { color: var(--primary-bright); }
 
-        /* Tabs */
         .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .tab-btn { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 10px 15px; border-radius: 10px; width: auto; white-space: nowrap; font-size: 0.85rem; }
         .tab-btn.active { background: var(--primary-glow); border-color: var(--primary-bright); color: white; }
@@ -219,7 +404,6 @@
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dashboard */
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
         .dash-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; }
         .dash-card h4 { margin: 0 0 5px 0; font-size: 0.8rem; color: var(--text-muted); }
@@ -231,18 +415,56 @@
             .live-clock { text-align: left; width: 100%; }
             .container { padding: 10px; }
             .recognized-block { flex-direction: column; text-align: center; }
-            .manual-checkin-row { flex-direction: column; }
-            .btn-manual { width: 100%; justify-content: center; min-height: 48px; }
+            .admin-float-btn { bottom: 18px; right: 18px; }
         }
     </style>
 </head>
 <body>
 
+<!-- ══════════════════════════════════════
+     Floating Admin Button
+══════════════════════════════════════ -->
+<button class="admin-float-btn" id="adminFloatBtn" onclick="openAdminModal()">
+    <i class="fas fa-shield-halved"></i>
+    <span class="admin-float-label">Admin Access</span>
+</button>
+
+<!-- ══════════════════════════════════════
+     Admin Login Modal
+══════════════════════════════════════ -->
+<div class="admin-modal-overlay" id="adminModalOverlay" onclick="handleOverlayClick(event)">
+    <div class="admin-modal-card" id="adminModalCard">
+        <button class="modal-close-btn" onclick="closeAdminModal()"><i class="fas fa-times"></i></button>
+
+        <div class="modal-badge"><i class="fas fa-shield-halved"></i></div>
+        <div class="modal-title">Admin Access</div>
+        <div class="modal-subtitle">ระบบสงวนสำหรับผู้ดูแลระบบเท่านั้น</div>
+
+        <div class="modal-pass-wrap">
+            <i class="fas fa-lock lock-icon"></i>
+            <input type="password" class="modal-pass-input" id="passInput" placeholder="รหัสผ่านผู้ดูแลระบบ">
+        </div>
+        <button class="modal-login-btn" onclick="adminAuth()">
+            <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ Admin
+        </button>
+        <div id="modalErrorMsg"></div>
+
+        <hr class="modal-divider">
+        <div class="modal-footer-note">
+            <i class="fas fa-lock" style="font-size:0.65rem;"></i>
+            Korat Pittayakom School — Attendance System
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     Header
+══════════════════════════════════════ -->
 <header>
     <div class="header-left">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3jZlVdxgEm6Vdo61ZcVRBBOPF4ga-xhdbiE71PP3dDqBHPc5YJ8BG7D8&s=10" 
-             alt="ตราโรงเรียนโคราชพิทยาคม" 
-             style="height: 65px; width: 65px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-bright); box-shadow: 0 0 15px var(--primary-glow);">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3jZlVdxgEm6Vdo61ZcVRBBOPF4ga-xhdbiE71PP3dDqBHPc5YJ8BG7D8&s=10"
+             alt="ตราโรงเรียนโคราชพิทยาคม"
+             style="height:65px; width:65px; object-fit:cover; border-radius:50%; border:2px solid var(--primary-bright); box-shadow:0 0 15px var(--primary-glow);">
         <h1><i class="fas fa-face-recognition"></i> ระบบสแกนหน้านักเรียนโรงเรียนโคราชพิทยาคม</h1>
     </div>
     <div class="live-clock">
@@ -251,76 +473,69 @@
     </div>
 </header>
 
-<div class="container">    
-    <div class="left-panel">        
-        <div class="card">            
-            <div id="statusLabel" class="status-badge status-wait">                
+<!-- ══════════════════════════════════════
+     Main Layout
+══════════════════════════════════════ -->
+<div class="container">
+
+    <!-- ─── Left Panel : Camera ─────────── -->
+    <div class="left-panel">
+        <div class="card">
+            <div id="statusLabel" class="status-badge status-wait">
                 <i class="fas fa-sync fa-spin"></i> LOADING AI SYSTEM...
             </div>
             <div class="video-container" id="videoContainer">
                 <div class="hud-overlay"></div>
-                <video id="video" autoplay muted playsinline></video> 
+                <video id="video" autoplay muted playsinline></video>
                 <canvas id="overlay"></canvas>
             </div>
-
             <div class="recognized-block">
                 <div>
-                    <small style="color: var(--text-muted); font-weight: 600;">LAST RECOGNIZED:</small>
+                    <small style="color:var(--text-muted); font-weight:600;">LAST RECOGNIZED:</small>
                     <h2 id="displayName">WAITING...</h2>
-                    <p id="displayTime" style="margin:5px 0 0 0; color: var(--primary-bright); font-weight: 500;">Please scan your face</p>
+                    <p id="displayTime" style="margin:5px 0 0 0; color:var(--primary-bright); font-weight:500;">Please scan your face</p>
                 </div>
-                <div id="logCount" style="text-align:center; background: rgba(15,23,42,0.8); border: 1px solid var(--glass-border); padding: 14px 22px; border-radius: 16px;">
-                    <span style="font-size: 1.8rem; color: var(--success); font-weight: 700;">0</span>
-                    <small style="color: var(--text-muted); display:block; font-size: 0.7rem;">TOTAL TODAY</small>
+                <div id="logCount" style="text-align:center; background:rgba(15,23,42,0.8); border:1px solid var(--glass-border); padding:14px 22px; border-radius:16px;">
+                    <span style="font-size:1.8rem; color:var(--success); font-weight:700;">0</span>
+                    <small style="color:var(--text-muted); display:block; font-size:0.7rem;">TOTAL TODAY</small>
                 </div>
             </div>
-
-            <!-- ── ช่องกรอกรหัสนักเรียน — แสดงตลอดเวลา ── -->
-            <div class="manual-checkin-box" id="manualCheckinSection">
-                <div class="box-label">
-                    <i class="fas fa-id-card"></i>
-                    <span>เช็คชื่อด้วยรหัสประจำตัวนักเรียน</span>
-                    <span style="color: rgba(148,163,184,0.5); font-weight: 400; margin-left: 4px;">/ สแกนหน้าไม่ผ่านก็ใช้ได้</span>
-                </div>
-
-                <div class="manual-checkin-row">
-                    <div class="manual-id-wrapper" style="flex:1;">
-                        <i class="fas fa-hashtag id-icon"></i>
-                        <input
-                            class="manual-id-input"
-                            type="number"
-                            id="manualIdInput"
-                            placeholder="พิมพ์รหัสนักเรียน แล้วกด Enter หรือกดปุ่ม →"
-                            autocomplete="off"
-                        >
-                    </div>
-                    <button class="btn-manual" onclick="manualCheckIn()">
-                        <i class="fas fa-sign-in-alt"></i> เช็คชื่อ
-                    </button>
-                </div>
-
-                <div class="manual-hint">
-                    <i class="fas fa-circle-info" style="color:var(--primary-bright);"></i>
-                    กรอกรหัสนักเรียน แล้วกด Enter หรือกดปุ่ม "เช็คชื่อ"
-                </div>
-                <div id="manualCheckInMsg"></div>
-            </div>
-
-        </div>    
+        </div>
     </div>
 
-    <div class="right-panel">        
-        <div class="card" id="loginCard">
-            <h3><i class="fas fa-shield-halved"></i> Admin Control</h3>
-            <input type="password" id="passInput" placeholder="Enter Admin Password"> 
-            <button class="btn-primary" onclick="adminAuth()">LOG IN AS ADMIN</button>
+    <!-- ─── Right Panel ─────────────────── -->
+    <div class="right-panel">
+
+        <!-- Manual Check-in Card -->
+        <div class="card checkin-card">
+            <div class="checkin-header">
+                <div class="checkin-icon-box"><i class="fas fa-id-card"></i></div>
+                <div>
+                    <div class="checkin-title">เช็คชื่อด้วยรหัสนักเรียน</div>
+                    <div class="checkin-sub">สำหรับกรณีสแกนใบหน้าไม่ผ่าน หรือต้องการเช็คชื่อด้วยตนเอง</div>
+                </div>
+            </div>
+            <div class="manual-id-wrapper">
+                <i class="fas fa-hashtag id-icon"></i>
+                <input class="manual-id-input" type="number" id="manualIdInput"
+                       placeholder="พิมพ์รหัสนักเรียน แล้วกด Enter…" autocomplete="off">
+            </div>
+            <button class="btn-checkin" onclick="manualCheckIn()">
+                <i class="fas fa-sign-in-alt"></i> เช็คชื่อ
+            </button>
+            <div class="manual-hint">
+                <i class="fas fa-circle-info" style="color:var(--primary-bright);"></i>
+                กรอกรหัสนักเรียน แล้วกด <kbd style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:1px 6px; font-family:inherit; font-size:0.72rem;">Enter</kbd> หรือกดปุ่มด้านบน
+            </div>
+            <div id="manualCheckInMsg"></div>
         </div>
 
+        <!-- Public Attendance Card -->
         <div class="card" id="publicAttendanceCard">
-            <h3 style="margin: 0 0 15px 0;"><i class="fas fa-list-check"></i> รายชื่อผู้ที่เข้าเรียน</h3>
-            <div class="scroll-list" style="max-height: 450px;">
+            <h3 style="margin:0 0 15px 0;"><i class="fas fa-list-check"></i> รายชื่อผู้ที่เข้าเรียน</h3>
+            <div class="scroll-list" style="max-height:450px;">
                 <table>
-                    <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
+                    <thead style="position:sticky; top:0; background:#131c2e; z-index:1;">
                         <tr><th>ชื่อ-สกุล</th><th>เวลา</th><th>สถานะ</th></tr>
                     </thead>
                     <tbody id="publicAttendanceList">
@@ -330,11 +545,12 @@
             </div>
         </div>
 
+        <!-- Admin Panel -->
         <div id="adminPanel" style="display:none;" class="card">
-            <button onclick="logout()" style="background:none; color: var(--danger); font-size: 0.85rem; width: auto; position: absolute; top: 15px; right: 15px; padding: 5px 10px; border: 1px solid rgba(244,63,94,0.2);">
+            <button onclick="logout()" style="background:none; color:var(--danger); font-size:0.85rem; width:auto; position:absolute; top:15px; right:15px; padding:5px 10px; border:1px solid rgba(244,63,94,0.2);">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
-            <h3 style="margin-bottom: 20px;"><i class="fas fa-cogs"></i> ระบบจัดการ (Admin)</h3>
+            <h3 style="margin-bottom:20px;"><i class="fas fa-cogs"></i> ระบบจัดการ (Admin)</h3>
 
             <div class="tab-nav">
                 <button class="tab-btn active" onclick="switchTab('tab-users')"><i class="fas fa-users"></i> นักเรียน</button>
@@ -343,26 +559,26 @@
             </div>
 
             <div id="tab-users" class="tab-pane active">
-                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(99,102,241,0.2);">
-                    <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;">+ ลงทะเบียนใบหน้าใหม่</h4>
-                    <div style="display: flex; gap: 10px;">
+                <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid rgba(99,102,241,0.2);">
+                    <h4 style="margin:0 0 10px 0; color:#fff; font-size:0.9rem;">+ ลงทะเบียนใบหน้าใหม่</h4>
+                    <div style="display:flex; gap:10px;">
                         <input id="regName" placeholder="ชื่อ-สกุล">
-                        <input id="regId" placeholder="รหัสนักเรียน" type="number" style="width: 120px;">
+                        <input id="regId" placeholder="รหัสนักเรียน" type="number" style="width:120px;">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <div style="display:flex; gap:10px; margin-top:5px;">
                         <input id="regClass" placeholder="ห้อง (เช่น 1/1)">
                         <button class="btn-primary" onclick="registerFace()"><i class="fas fa-camera"></i> สแกนบันทึก</button>
                     </div>
                 </div>
 
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; justify-content: space-between;">
+                <h4 style="margin:0 0 10px 0; color:#fff; font-size:0.9rem; display:flex; justify-content:space-between;">
                     <span><i class="fas fa-database"></i> ฐานข้อมูลนักเรียน</span>
-                    <button class="btn-del" onclick="clearRegisteredFaces()" style="font-size:0.7rem; padding: 3px 8px;"><i class="fas fa-users-slash"></i> ล้างทั้งหมด</button>
+                    <button class="btn-del" onclick="clearRegisteredFaces()" style="font-size:0.7rem; padding:3px 8px;"><i class="fas fa-users-slash"></i> ล้างทั้งหมด</button>
                 </h4>
-                <input type="text" id="searchUser" placeholder="🔍 ค้นหา ชื่อ, รหัส หรือ ห้อง..." onkeyup="refreshRegisteredList()" style="margin-bottom: 10px;">
+                <input type="text" id="searchUser" placeholder="🔍 ค้นหา ชื่อ, รหัส หรือ ห้อง..." onkeyup="refreshRegisteredList()" style="margin-bottom:10px;">
                 <div class="scroll-list">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
+                        <thead style="position:sticky; top:0; background:#131c2e; z-index:1;">
                             <tr><th>ข้อมูล</th><th style="text-align:center;">จัดการ</th></tr>
                         </thead>
                         <tbody id="registeredList"></tbody>
@@ -371,16 +587,16 @@
             </div>
 
             <div id="tab-attendance" class="tab-pane">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <input type="date" id="filterDate" onchange="refreshAttendanceTable()" style="width: 60%;">
-                    <div style="display:flex; gap: 5px;">
-                        <button class="btn-primary" style="padding: 10px;" onclick="exportExcel()"><i class="fas fa-file-excel"></i></button>
-                        <button class="btn-del" style="padding: 10px;" onclick="clearAttendanceHistory()"><i class="fas fa-trash-alt"></i></button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <input type="date" id="filterDate" onchange="refreshAttendanceTable()" style="width:60%;">
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn-primary" style="padding:10px;" onclick="exportExcel()"><i class="fas fa-file-excel"></i></button>
+                        <button class="btn-del" style="padding:10px;" onclick="clearAttendanceHistory()"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
                 <div class="scroll-list">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e; z-index: 1;">
+                        <thead style="position:sticky; top:0; background:#131c2e; z-index:1;">
                             <tr><th>ชื่อ/เวลา</th><th>สถานะ</th><th>วิธี</th><th>ลบ</th></tr>
                         </thead>
                         <tbody id="attendanceList"></tbody>
@@ -389,17 +605,17 @@
             </div>
 
             <div id="tab-dashboard" class="tab-pane">
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-chart-bar"></i> สรุปรายวัน (ตามห้อง)</h4>
-                <input type="date" id="dashDay" onchange="refreshDashboard()" style="margin-bottom: 10px;">
+                <h4 style="margin:0 0 10px 0; color:#fff; font-size:0.9rem;"><i class="fas fa-chart-bar"></i> สรุปรายวัน (ตามห้อง)</h4>
+                <input type="date" id="dashDay" onchange="refreshDashboard()" style="margin-bottom:10px;">
                 <div id="classDashContainer" class="dash-grid"></div>
 
-                <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                <hr style="border-color:rgba(255,255,255,0.1); margin:20px 0;">
 
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem;"><i class="fas fa-calendar-times"></i> สรุปรายเดือน (จำนวนครั้งที่มาสาย)</h4>
-                <input type="month" id="dashMonth" onchange="refreshDashboard()" style="margin-bottom: 10px;">
-                <div class="scroll-list" style="max-height: 200px;">
+                <h4 style="margin:0 0 10px 0; color:#fff; font-size:0.9rem;"><i class="fas fa-calendar-times"></i> สรุปรายเดือน (จำนวนครั้งที่มาสาย)</h4>
+                <input type="month" id="dashMonth" onchange="refreshDashboard()" style="margin-bottom:10px;">
+                <div class="scroll-list" style="max-height:200px;">
                     <table>
-                        <thead style="position: sticky; top: 0; background: #131c2e;">
+                        <thead style="position:sticky; top:0; background:#131c2e;">
                             <tr><th>ชื่อ-สกุล (ห้อง)</th><th style="text-align:center; color:var(--danger)">สาย (ครั้ง)</th></tr>
                         </thead>
                         <tbody id="monthlyLateList"></tbody>
@@ -407,12 +623,13 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
+    </div><!-- /right-panel -->
+</div><!-- /container -->
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { 
+import {
     getFirestore, collection, addDoc, getDocs, onSnapshot,
     deleteDoc, doc, updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -432,27 +649,25 @@ const ADMIN_PASS = "admin1234";
 const MODEL_URL  = 'https://justadudewhohacks.github.io/face-api.js/models';
 const LATE_TIME  = "08:00";
 
-// ── หน่วงเวลาแสดงผล UI ต่อคน 1 คน (กัน flicker ขณะสแกน) ──
-const FEEDBACK_COOLDOWN  = 5000; // ms
-const lastFeedbackMap    = {};   // { studentId: Date }
+const FEEDBACK_COOLDOWN = 5000;
+const lastFeedbackMap   = {};
 
-let faceMatcher    = null;
-let attendanceData = [];
+let faceMatcher     = null;
+let attendanceData  = [];
 let registeredFaces = [];
-let isScanning     = false;
+let isScanning      = false;
 
 const video  = document.getElementById('video');
 const canvas = document.getElementById('overlay');
 
-// วันที่ปัจจุบัน (local)
-const todayObj    = new Date();
+const todayObj     = new Date();
 const localDateISO = `${todayObj.getFullYear()}-${String(todayObj.getMonth()+1).padStart(2,'0')}-${String(todayObj.getDate()).padStart(2,'0')}`;
 const localMonthISO = `${todayObj.getFullYear()}-${String(todayObj.getMonth()+1).padStart(2,'0')}`;
 document.getElementById('filterDate').value = localDateISO;
 document.getElementById('dashDay').value    = localDateISO;
 document.getElementById('dashMonth').value  = localMonthISO;
 
-// ─── นาฬิกา Real-time ───────────────────────────────────────
+// ─── Live Clock ──────────────────────────────────────────────
 function updateLiveClock() {
     const now = new Date();
     document.getElementById('liveTime').innerText = now.toLocaleTimeString('th-TH', { hour12: false });
@@ -461,7 +676,27 @@ function updateLiveClock() {
 setInterval(updateLiveClock, 1000);
 updateLiveClock();
 
-// ─── Tab ────────────────────────────────────────────────────
+// ─── Admin Modal ─────────────────────────────────────────────
+window.openAdminModal = function() {
+    document.getElementById('adminModalOverlay').classList.add('open');
+    document.getElementById('modalErrorMsg').textContent = '';
+    setTimeout(() => document.getElementById('passInput').focus(), 380);
+};
+
+window.closeAdminModal = function() {
+    document.getElementById('adminModalOverlay').classList.remove('open');
+};
+
+window.handleOverlayClick = function(e) {
+    if (e.target === document.getElementById('adminModalOverlay')) closeAdminModal();
+};
+
+// Enter key in modal
+document.getElementById('passInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') window.adminAuth();
+});
+
+// ─── Tab ─────────────────────────────────────────────────────
 window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -470,7 +705,7 @@ window.switchTab = function(tabId) {
     if (tabId === 'tab-dashboard') refreshDashboard();
 };
 
-// ─── Firebase listeners ─────────────────────────────────────
+// ─── Firebase listeners ──────────────────────────────────────
 function listenFacesFromFirebase() {
     onSnapshot(collection(db, "faces"), (snap) => {
         registeredFaces = [];
@@ -530,31 +765,24 @@ async function runScanner() {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const resized = faceapi.resizeResults(detections, displaySize);
-
         if (resized.length === 0 || !faceMatcher) return;
-
         resized.forEach(det => {
             const result = faceMatcher.findBestMatch(det.descriptor);
             if (result.label !== 'unknown' && result.distance < 0.45) {
-                new faceapi.draw.DrawBox(det.detection.box, {
-                    label: result.label.split('|')[0], boxColor: '#6366f1'
-                }).draw(canvas);
+                new faceapi.draw.DrawBox(det.detection.box, { label: result.label.split('|')[0], boxColor: '#6366f1' }).draw(canvas);
                 processAttendance(result.label, 'face');
             } else {
-                new faceapi.draw.DrawBox(det.detection.box, {
-                    label: 'ไม่พบในระบบ', boxColor: '#f43f5e'
-                }).draw(canvas);
+                new faceapi.draw.DrawBox(det.detection.box, { label: 'ไม่พบในระบบ', boxColor: '#f43f5e' }).draw(canvas);
             }
         });
-
     } catch (e) {} finally { isScanning = false; }
 }
 
 // ─── Core check-in logic ─────────────────────────────────────
 window.processAttendance = async function(label, method = 'face') {
     const [name, id, room] = label.split('|');
-    const now        = new Date();
-    const dateValue  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const now       = new Date();
+    const dateValue = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
     if (method === 'face') {
         const lastFB = lastFeedbackMap[id] || 0;
@@ -564,10 +792,9 @@ window.processAttendance = async function(label, method = 'face') {
 
     const existingLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
     if (existingLog) {
-        document.getElementById('displayName').innerText  = name;
-        document.getElementById('displayTime').innerHTML  =
-            `<i class="fas fa-circle-check" style="color:var(--warning)"></i> ` +
-            `เช็คชื่อแล้วในวันนี้ เวลา ${existingLog.time}`;
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('displayTime').innerHTML =
+            `<i class="fas fa-circle-check" style="color:var(--warning)"></i> เช็คชื่อแล้วในวันนี้ เวลา ${existingLog.time}`;
         return { alreadyCheckedIn: true, time: existingLog.time };
     }
 
@@ -585,31 +812,22 @@ window.processAttendance = async function(label, method = 'face') {
                 : `<i class="fas fa-keyboard"    style="color:var(--primary-bright)"></i> เช็คชื่อด้วยรหัส เวลา ${timeStr}`;
         playNotification(name, status);
         return { success: true, timeStr, status };
-    } catch (e) {
-        console.error(e);
-        return { error: true };
-    }
+    } catch (e) { return { error: true }; }
 };
 
-// ─── Manual Check-in (กรอกรหัส) ─────────────────────────────
+// ─── Manual Check-in ─────────────────────────────────────────
 window.manualCheckIn = async function() {
     const msgEl   = document.getElementById('manualCheckInMsg');
     const inputEl = document.getElementById('manualIdInput');
     const inputId = inputEl.value.trim();
 
-    if (!inputId) {
-        showMsg(msgEl, 'warning', 'กรุณาพิมพ์รหัสประจำตัวนักเรียน');
-        return;
-    }
+    if (!inputId) { showMsg(msgEl, 'warning', 'กรุณาพิมพ์รหัสประจำตัวนักเรียน'); return; }
 
     const student = registeredFaces.find(f => f.label.split('|')[1] === inputId);
-    if (!student) {
-        showMsg(msgEl, 'danger', `ไม่พบรหัส ${inputId} ในระบบ กรุณาติดต่อครู`);
-        return;
-    }
+    if (!student) { showMsg(msgEl, 'danger', `ไม่พบรหัส ${inputId} ในระบบ กรุณาติดต่อครู`); return; }
 
     const [name, id, room] = student.label.split('|');
-    const now = new Date();
+    const now       = new Date();
     const dateValue = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
     const existingLog = attendanceData.find(a => a.id === id && a.dateValue === dateValue);
@@ -636,34 +854,24 @@ window.manualCheckIn = async function() {
     }
 };
 
-// helper: แสดง feedback ใน manualCheckInMsg
-function showMsg(el, type, text) {
-    const colors = {
-        success: 'var(--success)', danger: 'var(--danger)',
-        warning: 'var(--warning)', info: 'var(--primary-bright)'
-    };
-    const icons = {
-        success: 'fa-check-circle', danger: 'fa-times-circle',
-        warning: 'fa-exclamation-triangle', info: 'fa-spinner fa-spin'
-    };
-    el.innerHTML = `<span style="color:${colors[type]}"><i class="fas ${icons[type]}"></i> ${text}</span>`;
-}
-
-// Enter key ใน manual input
 document.getElementById('manualIdInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') window.manualCheckIn();
 });
+
+function showMsg(el, type, text) {
+    const colors = { success: 'var(--success)', danger: 'var(--danger)', warning: 'var(--warning)', info: 'var(--primary-bright)' };
+    const icons  = { success: 'fa-check-circle', danger: 'fa-times-circle', warning: 'fa-exclamation-triangle', info: 'fa-spinner fa-spin' };
+    el.innerHTML = `<span style="color:${colors[type]}"><i class="fas ${icons[type]}"></i> ${text}</span>`;
+}
 
 // ─── Speech ──────────────────────────────────────────────────
 window.playNotification = function(studentName, status) {
     try {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(
-                `${studentName} ${status === 'LATE' ? 'มาสายครับ' : 'มาทันเวลาครับ'}`
-            );
-            utterance.lang = 'th-TH'; utterance.rate = 1.15; utterance.pitch = 1.25;
-            window.speechSynthesis.speak(utterance);
+            const u = new SpeechSynthesisUtterance(`${studentName} ${status === 'LATE' ? 'มาสายครับ' : 'มาทันเวลาครับ'}`);
+            u.lang = 'th-TH'; u.rate = 1.15; u.pitch = 1.25;
+            window.speechSynthesis.speak(u);
         }
     } catch (e) {}
 };
@@ -671,11 +879,8 @@ window.playNotification = function(studentName, status) {
 // ─── Public attendance list ──────────────────────────────────
 window.refreshPublicAttendanceTable = function() {
     const tbody    = document.getElementById('publicAttendanceList');
-    const todayLogs = attendanceData.filter(a =>
-        a.dateValue === localDateISO ||
-        (!a.dateValue && a.timestamp && a.timestamp.startsWith(localDateISO))
-    );
-    const logSpan = document.querySelector('#logCount span');
+    const todayLogs = attendanceData.filter(a => a.dateValue === localDateISO || (!a.dateValue && a.timestamp && a.timestamp.startsWith(localDateISO)));
+    const logSpan  = document.querySelector('#logCount span');
     if (logSpan) logSpan.innerText = todayLogs.length;
 
     if (attendanceData.length === 0) {
@@ -692,22 +897,11 @@ window.refreshPublicAttendanceTable = function() {
 
     let html = '';
     for (const [date, logs] of groupedData.entries()) {
-        html += `
-            <tr><td colspan="3" style="background:rgba(99,102,241,0.15); color:var(--primary-bright); text-align:center; font-weight:600; padding:10px; border-radius:8px;">
-                <i class="far fa-calendar-alt"></i> ประจำวันที่ ${date}
-            </td></tr>`;
+        html += `<tr><td colspan="3" style="background:rgba(99,102,241,0.15); color:var(--primary-bright); text-align:center; font-weight:600; padding:10px; border-radius:8px;"><i class="far fa-calendar-alt"></i> ประจำวันที่ ${date}</td></tr>`;
         html += logs.map(a => {
-            const ss = a.status === 'LATE'
-                ? 'background:rgba(244,63,94,0.15); color:#fda4af;'
-                : 'background:rgba(16,185,129,0.15); color:#34d399;';
-            const methodIcon = a.method === 'manual'
-                ? '<i class="fas fa-keyboard" title="เช็คชื่อด้วยรหัส" style="color:var(--primary-bright); margin-left:4px;"></i>' : '';
-            return `
-                <tr>
-                    <td><strong style="color:#fff">${a.name}${methodIcon}</strong><br><small style="color:var(--text-muted)">ห้อง ${a.room || '-'}</small></td>
-                    <td><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
-                    <td><span class="status-pill" style="${ss}">${a.status}</span></td>
-                </tr>`;
+            const ss = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
+            const mi = a.method === 'manual' ? '<i class="fas fa-keyboard" title="เช็คชื่อด้วยรหัส" style="color:var(--primary-bright); margin-left:4px;"></i>' : '';
+            return `<tr><td><strong style="color:#fff">${a.name}${mi}</strong><br><small style="color:var(--text-muted)">ห้อง ${a.room || '-'}</small></td><td><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td><td><span class="status-pill" style="${ss}">${a.status}</span></td></tr>`;
         }).join('');
     }
     tbody.innerHTML = html;
@@ -722,14 +916,12 @@ window.refreshRegisteredList = function() {
         .map((f) => {
             const [name, id, room] = f.label.split('|');
             const idx = registeredFaces.findIndex(r => r.docId === f.docId);
-            return `
-                <tr>
-                    <td><strong style="color:#fff">${name}</strong><br><small style="color:var(--text-muted)">ID: ${id} | ห้อง ${room}</small></td>
-                    <td style="text-align:center; white-space:nowrap;">
-                        <button class="btn-del" onclick="editFaceName(${idx})" style="background:rgba(99,102,241,0.15); color:#818cf8; padding:6px;"><i class="fas fa-edit"></i></button>
-                        <button class="btn-del" onclick="deleteFace(${idx})" style="padding:6px;"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
+            return `<tr>
+                <td><strong style="color:#fff">${name}</strong><br><small style="color:var(--text-muted)">ID: ${id} | ห้อง ${room}</small></td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <button class="btn-del" onclick="editFaceName(${idx})" style="background:rgba(99,102,241,0.15); color:#818cf8; padding:6px;"><i class="fas fa-edit"></i></button>
+                    <button class="btn-del" onclick="deleteFace(${idx})" style="padding:6px;"><i class="fas fa-trash"></i></button>
+                </td></tr>`;
         }).join('');
 };
 
@@ -765,9 +957,7 @@ window.registerFace = async function() {
         try {
             await addDoc(collection(db, "faces"), { label: `${name}|${id}|${room}`, descriptor: Array.from(det.descriptor) });
             alert("ลงทะเบียนสำเร็จ!");
-            document.getElementById('regName').value = "";
-            document.getElementById('regId').value   = "";
-            document.getElementById('regClass').value = "";
+            document.getElementById('regName').value = document.getElementById('regId').value = document.getElementById('regClass').value = "";
         } catch (e) { alert("เกิดข้อผิดพลาดในการบันทึก"); }
     } else { alert("ไม่พบใบหน้า กรุณาลองใหม่"); }
     updateStatus("SYSTEM READY", "status-ready");
@@ -777,30 +967,23 @@ window.registerFace = async function() {
 window.refreshAttendanceTable = function() {
     const tbody = document.getElementById('attendanceList');
     const sel   = document.getElementById('filterDate').value;
-    const logs  = attendanceData.filter(a =>
-        a.dateValue === sel || (!a.dateValue && a.timestamp && a.timestamp.startsWith(sel))
-    );
+    const logs  = attendanceData.filter(a => a.dateValue === sel || (!a.dateValue && a.timestamp && a.timestamp.startsWith(sel)));
     tbody.innerHTML = logs.map(a => {
-        const ss = a.status === 'LATE'
-            ? 'background:rgba(244,63,94,0.15); color:#fda4af;'
-            : 'background:rgba(16,185,129,0.15); color:#34d399;';
-        const methodBadge = a.method === 'manual'
+        const ss = a.status === 'LATE' ? 'background:rgba(244,63,94,0.15); color:#fda4af;' : 'background:rgba(16,185,129,0.15); color:#34d399;';
+        const mb = a.method === 'manual'
             ? `<span style="background:rgba(99,102,241,0.2); color:#818cf8; padding:2px 6px; border-radius:6px; font-size:0.7rem;"><i class="fas fa-keyboard"></i> รหัส</span>`
             : `<span style="background:rgba(16,185,129,0.1); color:#34d399; padding:2px 6px; border-radius:6px; font-size:0.7rem;"><i class="fas fa-face-smile"></i> หน้า</span>`;
-        return `
-            <tr>
-                <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
-                <td><span class="status-pill" style="${ss}">${a.status}</span></td>
-                <td>${methodBadge}</td>
-                <td style="text-align:center;">
-                    <button class="btn-del" onclick="deleteSingleAttendance('${a.docId}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fas fa-times"></i></button>
-                </td>
-            </tr>`;
+        return `<tr>
+            <td><strong style="color:#fff">${a.name}</strong><br><small style="color:var(--text-muted)"><i class="far fa-clock"></i> ${a.time}</small></td>
+            <td><span class="status-pill" style="${ss}">${a.status}</span></td>
+            <td>${mb}</td>
+            <td style="text-align:center;"><button class="btn-del" onclick="deleteSingleAttendance('${a.docId}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fas fa-times"></i></button></td>
+        </tr>`;
     }).join('');
 };
 
 window.deleteSingleAttendance = async function(docId) {
-    if (!docId) return alert("ไม่สามารถลบรายตัวได้ กรุณาใช้ปุ่มล้างทั้งหมด");
+    if (!docId) return alert("ไม่สามารถลบรายตัวได้");
     if (confirm("ต้องการลบประวัตินี้ใช่หรือไม่?")) {
         try { await deleteDoc(doc(db, "attendance", docId)); }
         catch (e) { alert("ลบไม่สำเร็จ"); }
@@ -826,20 +1009,16 @@ window.clearRegisteredFaces = async function() {
 window.refreshDashboard = function() {
     const dashDay   = document.getElementById('dashDay').value;
     const dashMonth = document.getElementById('dashMonth').value;
-
-    const dayLogs = attendanceData.filter(a =>
-        a.dateValue === dashDay || (!a.dateValue && a.timestamp && a.timestamp.startsWith(dashDay))
-    );
+    const dayLogs   = attendanceData.filter(a => a.dateValue === dashDay || (!a.dateValue && a.timestamp && a.timestamp.startsWith(dashDay)));
     const classStats = {};
     dayLogs.forEach(log => {
         const room = log.room || 'ไม่ระบุ';
         if (!classStats[room]) classStats[room] = { total: 0, ontime: 0, late: 0 };
         classStats[room].total++;
-        if (log.status === 'LATE') classStats[room].late++;
-        else classStats[room].ontime++;
+        if (log.status === 'LATE') classStats[room].late++; else classStats[room].ontime++;
     });
-    const dashContainer = document.getElementById('classDashContainer');
-    dashContainer.innerHTML = Object.keys(classStats).length === 0
+    const dc = document.getElementById('classDashContainer');
+    dc.innerHTML = Object.keys(classStats).length === 0
         ? `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px;">ไม่มีข้อมูลการเข้าเรียนในวันที่เลือก</div>`
         : Object.entries(classStats).sort((a,b) => a[0].localeCompare(b[0])).map(([room, stat]) => `
             <div class="dash-card">
@@ -851,53 +1030,62 @@ window.refreshDashboard = function() {
             </div>`).join('');
 
     const monthLogs = attendanceData.filter(a => a.dateValue && a.dateValue.startsWith(dashMonth));
-    const studentLateStats = {};
+    const sls = {};
     monthLogs.forEach(log => {
-        if (!studentLateStats[log.id]) studentLateStats[log.id] = { name: log.name, room: log.room, lateCount: 0 };
-        if (log.status === 'LATE') studentLateStats[log.id].lateCount++;
+        if (!sls[log.id]) sls[log.id] = { name: log.name, room: log.room, lateCount: 0 };
+        if (log.status === 'LATE') sls[log.id].lateCount++;
     });
-    document.getElementById('monthlyLateList').innerHTML = Object.values(studentLateStats)
-        .filter(s => s.lateCount > 0)
-        .sort((a, b) => b.lateCount - a.lateCount)
-        .map(s => `
-            <tr>
-                <td><strong style="color:#fff">${s.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${s.room || '-'}</small></td>
-                <td style="text-align:center; color:var(--danger); font-size:1.2rem; font-weight:700;">${s.lateCount}</td>
-            </tr>`).join('')
+    document.getElementById('monthlyLateList').innerHTML = Object.values(sls)
+        .filter(s => s.lateCount > 0).sort((a, b) => b.lateCount - a.lateCount)
+        .map(s => `<tr>
+            <td><strong style="color:#fff">${s.name}</strong><br><small style="color:var(--text-muted)">ห้อง ${s.room || '-'}</small></td>
+            <td style="text-align:center; color:var(--danger); font-size:1.2rem; font-weight:700;">${s.lateCount}</td>
+        </tr>`).join('')
         || `<tr><td colspan="2" style="text-align:center; color:var(--success);">เดือนนี้ไม่มีนักเรียนมาสายเลย 🎉</td></tr>`;
 };
 
 // ─── Admin auth ──────────────────────────────────────────────
 window.adminAuth = function() {
     if (document.getElementById('passInput').value === ADMIN_PASS) {
-        document.getElementById('loginCard').style.display           = 'none';
+        closeAdminModal();
         document.getElementById('publicAttendanceCard').style.display = 'none';
         document.getElementById('adminPanel').style.display           = 'block';
-    } else { alert("รหัสผ่านไม่ถูกต้อง"); }
+        document.getElementById('adminFloatBtn').style.display        = 'none';
+        document.getElementById('passInput').value = '';
+    } else {
+        // Shake + error message
+        const card = document.getElementById('adminModalCard');
+        card.classList.remove('shake');
+        void card.offsetWidth; // reflow to restart animation
+        card.classList.add('shake');
+        document.getElementById('modalErrorMsg').innerHTML =
+            `<i class="fas fa-times-circle"></i> รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่`;
+        document.getElementById('passInput').value = '';
+        document.getElementById('passInput').focus();
+        setTimeout(() => {
+            card.classList.remove('shake');
+            document.getElementById('modalErrorMsg').textContent = '';
+        }, 3000);
+    }
 };
 
 window.logout = function() {
-    document.getElementById('loginCard').style.display           = 'block';
     document.getElementById('publicAttendanceCard').style.display = 'block';
     document.getElementById('adminPanel').style.display           = 'none';
-    document.getElementById('passInput').value = "";
+    document.getElementById('adminFloatBtn').style.display        = 'flex';
 };
 
 // ─── Face matcher ────────────────────────────────────────────
 window.updateFaceMatcher = function() {
     if (registeredFaces.length === 0) { faceMatcher = null; return; }
-    const labeled = registeredFaces.map(f =>
-        new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)])
-    );
+    const labeled = registeredFaces.map(f => new faceapi.LabeledFaceDescriptors(f.label, [new Float32Array(f.descriptor)]));
     faceMatcher = new faceapi.FaceMatcher(labeled, 0.5);
 };
 
 // ─── Export Excel ────────────────────────────────────────────
 window.exportExcel = function() {
     const sel  = document.getElementById('filterDate').value;
-    const logs = attendanceData.filter(a =>
-        a.dateValue === sel || (!a.dateValue && a.timestamp && a.timestamp.startsWith(sel))
-    );
+    const logs = attendanceData.filter(a => a.dateValue === sel || (!a.dateValue && a.timestamp && a.timestamp.startsWith(sel)));
     if (logs.length === 0) return alert("ไม่มีข้อมูลสำหรับวันที่เลือก");
     const ws = XLSX.utils.json_to_sheet(logs.map(r => ({
         "ชื่อ": r.name, "รหัสนักเรียน": r.id, "ห้องเรียน": r.room,
@@ -912,8 +1100,8 @@ window.exportExcel = function() {
 // ─── Status helper ───────────────────────────────────────────
 function updateStatus(text, cls) {
     const el = document.getElementById('statusLabel');
-    el.innerHTML  = `<i class="fas fa-circle-info"></i> ${text}`;
-    el.className  = `status-badge ${cls}`;
+    el.innerHTML = `<i class="fas fa-circle-info"></i> ${text}`;
+    el.className = `status-badge ${cls}`;
 }
 
 init();
